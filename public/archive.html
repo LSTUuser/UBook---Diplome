@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет читателя - Архив</title>
+    <link rel="stylesheet" href="/styles/archive_style.css">
+</head>
+<body class="archive-body">
+    <header class="archive-header">
+        <div class="header-left">
+            <img src="/images/logo.png" alt="Логотип UBook" class="logo">
+            <h1 class="app-title">UBook</h1>
+        </div>
+        <nav class="nav-menu">
+            <a href="/dashboard.html" class="nav-link">Главная</a>
+            <a href="/recomended_list.html" class="nav-link">Список рекомендаций</a>
+            <a href="/notifications.html" class="nav-link">Уведомления</a>
+            <a href="/archive.html" class="nav-link">Архив</a>
+        </nav>
+        <div class="user-header">
+            <img src="/images/user_icon.png" alt="Иконка пользователя" class="user-icon">
+            <h1 class="archive-title dropdown-toggle"><span id="user-name">Гуцалов Артём Витальевич</span></h1>
+            <div class="dropdown-menu">
+                <a href="/my_books.html" class="dropdown-link">Мои книги</a>
+                <a href="/edit_profile.html" class="dropdown-link">Редактировать профиль</a>
+                <a href="/login.html" class="dropdown-link">Выход</a>
+            </div>
+        </div>
+    </header>
+    
+        <div class="content">
+            <div class="body-top">
+                <div class="statistics">
+                    <div>Общее количество книг: 2</div>
+                    <div>Вовремя сдано: 1</div>
+                    <div>Просрочено: 1</div>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="search-input" class="search-input" placeholder="Поиск книги...">
+                    <button class="search-button">Поиск</button>
+                </div>
+            </div>
+            <h2 class="my-books">Архив</h2>
+            <div class="book-list">
+                <div class="book">
+                    <h3 class="book-name">Основы высшей математики: Учебное пособие</h3>
+                    <h5 class="book-date">
+                        <div class="issuance-date">Дата выдачи: 23.11.2024</div>
+                        <div class="return-date on-time">Дата возврата: 07.12.2024</div>
+                    </h5>
+                    <button class="toggle-details">Больше информации</button>
+                    <div class="book-details">
+                        <hr class="line">
+                        <div class="book-description">
+                            <div>Автор: Аскар Туганбаев</div>
+                            <div>Год издания: 2011</div>
+                            <div>УДК: 510</div>
+                            <div>Категория: Фундаментальные и общие проблемы математики. 
+                            Основания математики, математическая логика и т.п.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="book">
+                    <h3 class="book-name">Искусство Программирования</h3>
+                    <h5 class="book-date">
+                        <div class="issuance-date">Дата выдачи: 02.12.2024</div>
+                        <div class="return-date late">Дата возврата: 05.12.2024</div>
+                    </h5>
+                    <button class="toggle-details">Больше информации</button>
+                    <div class="book-details">
+                        <hr class="line">
+                        <div class="book-description">
+                            <div>Автор: Дональд Эрвин</div>
+                            <div>Год издания: 1968</div>
+                            <div>УДК: 681.142.2</div>
+                            <div>Категория: Точная механика</div>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+
+        <footer class="footer">
+        
+        </footer>
+        <script src="app.js"></script>
+</body>
+</html>

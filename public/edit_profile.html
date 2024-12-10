@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование профиля - UBook</title>
+    <link rel="stylesheet" href="/styles/edit_profile_style.css">
+</head>
+<body class="edit-body">
+    <div class="edit-header">
+        <img src="/images/logo.png" alt="Логотип UBook" class="edit-logo">
+        <h1 class="edit-name">UBook</h1>
+    </div>
+    <div class="edit-container">
+        <h1 class="edit-title">Редактирование профиля</h1>
+        <form action="/register" method="POST">
+            <div class="input-group">
+                <label for="fullname">ФИО</label>
+                <input type="text" id="fullname" name="fullname" required>
+            </div>
+            <div class="input-group">
+                <label for="id-card">Номер студенческого билета</label>
+                <input type="text" id="id-card" name="id-card" required>
+            </div>
+            <div class="input-group">
+                <label for="group">Группа</label>
+                <input type="text" id="group" name="group" list="group-options" required>
+                <datalist id="group-options">
+                    <option value="АИ">
+                    <option value="ПИ">
+                    <option value="АС">
+                    <option value="ЭО">
+                    <option value="ЭП">
+                </datalist>
+            </div>
+            <button type="submit" class="reg-button">Изменить данные</button>
+        </form>
+    </div>
+</body>
+</html>

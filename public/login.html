@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация - UBook</title>
+    <link rel="stylesheet" href="/styles/login_style.css">
+</head>
+<body class="auth-body">
+    <div class="auth-header">
+        <img src="/images/logo.png" alt="Логотип UBook" class="auth-logo">
+        <h1 class="auth-name">UBook</h1>
+    </div>
+    <div class="auth-container">
+        <h1 class="auth-title">Авторизация</h1>
+        <form action="/login" method="POST">
+            <div class="input-group">
+                <label for="email">Почта</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="auth-button">Войти</button>
+            <div class="reg-link-container">
+                <p class="auth-reg">Не зарегистрированы? <a href="/register.html" class="reg-link">Создать аккаунт</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
