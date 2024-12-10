@@ -1,0 +1,59 @@
+.reg-scs-body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.reg-scs-header {
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    background-color: #24922F;
+    justify-content: center;
+    color: white;
+    width: 660px;
+    box-sizing: border-box;
+}
+
+.reg-scs-logo {
+    height: 60px;
+    width: 60px;
+}
+
+.reg-scs-name {
+    font-size: 24px;
+}
+
+.reg-scs-title {
+    font-size: 24px;
+}
+
+.reg-scs-container {
+    width: 600px;
+    background-color: white;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 30px;
+    padding-top: 0
+}
+
+.reg-scs-content {
+    font-size: 16px;
+    color:#383737;
+}
+
+.log-link {
+    color: #24922F;
+    text-decoration: none;
+}
+
+.log-link:hover {
+    text-decoration: underline;
+}

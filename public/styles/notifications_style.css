@@ -1,0 +1,148 @@
+.notifications-body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+
+.notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    height: 60px;
+}
+
+.user-header {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: inherit;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #45a049;
+    padding: 10px;
+    z-index: 1000;
+    min-width: max-content;
+}
+
+.dropdown-link {
+    display: block;
+    margin: auto;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+}
+
+.dropdown-link:last-child {
+    margin-bottom: 0;
+}
+
+.dropdown-link:hover {
+    text-decoration: underline;
+    color: #ddd;
+}
+
+.notifications-title {
+    font-size: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+.notifications-title:hover {
+    text-decoration: underline;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+    margin-left: 7px;
+}
+
+.user-icon {
+    width: 18px;
+    height: 18px;   
+}
+
+.app-title {
+    font-size: 24px;
+    color: white;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    background-color: #24922F;
+    padding-right: 20px;
+}
+
+.content {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.notifications-head {
+    font-size: 30px;
+    text-align: center;
+}
+
+.notifications-list {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-direction: column;
+}
+
+.notification {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 60%;
+}
+
+.notification-name {
+    font-size: 16px;
+}
+
+.notification-description {
+    font-size: 13px;
+}
+
+.notification-logo {
+    margin-right: 15px;
+    width: 20px;
+    height: 20px;
+}
