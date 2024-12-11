@@ -274,6 +274,7 @@
     text-decoration: none;
     color: #575858;
     font-weight: bold;
+    margin-right: 10px;
 }
 
 .filter-title-main:hover {
@@ -344,4 +345,54 @@
 
 .reset-button:hover {
     background-color: #e53935;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+}
+  
+.page-info {
+    margin: 0 10px;
+    color: #575858;
+    font-weight: bold;
+}
+  
+.page-button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: background-color 0.3s ease;
+}
+
+.page-button:hover {
+    background-color: #45a049;
+}
+
+.page-button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+.page-select {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.page-select:focus {
+    border-color: #4CAF50;
+    outline: none;
 }

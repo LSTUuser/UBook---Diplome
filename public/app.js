@@ -1,67 +1,128 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const dropdownToggle = document.querySelector('.dropdown-toggle'); // Находим элемент toggle
-    const dropdownMenu = document.querySelector('.dropdown-menu'); // Находим меню
-
-    dropdownToggle.addEventListener('click', function (event) {
-        event.preventDefault(); // Предотвращаем стандартное поведение (если есть)
-        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block'; // Переключаем видимость меню
-    });
-
-    // Закрытие меню при клике вне
-    document.addEventListener('click', function (event) {
-        if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-            dropdownMenu.style.display = 'none'; // Скрываем меню, если кликнули вне
-        }
-    });
+document.addEventListener("DOMContentLoaded", function () {
+    // Группировка функций
+    initDropdown();
+    initToggleDetails();
+    initFilterToggle();
+    initPagination();
 });
 
-document.addEventListener("DOMContentLoaded", function () {
+function initDropdown() {
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+
+    if (dropdownToggle && dropdownMenu) {
+        dropdownToggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.style.display = 'none';
+            }
+        });
+    }
+}
+
+function initToggleDetails() {
     const buttons = document.querySelectorAll(".toggle-details");
 
     buttons.forEach(button => {
         button.addEventListener("click", function () {
             const details = this.nextElementSibling;
-            if (details.style.display === "block") {
-                details.style.display = "none";
-                this.textContent = "Больше информации";
-            } else {
-                details.style.display = "block";
-                this.textContent = "Скрыть информацию";
+            if (details) {
+                details.style.display = details.style.display === "block" ? "none" : "block";
+                this.textContent = details.style.display === "block" ? "Скрыть информацию" : "Больше информации";
             }
         });
     });
-});
+}
 
-document.addEventListener("DOMContentLoaded", function() {
-    // Находим элементы
-    const filterTitleMain = document.querySelector(".filter-title-main"); // Заголовок для клика
-    const filter = document.querySelector(".filter-header"); // Верхняя панель с заголовком
-    const bookFilter = document.querySelector(".book-filter"); // Форма фильтра
-    const hideButton = document.querySelector(".hide-button"); // Кнопка "Скрыть"
+function initFilterToggle() {
+    const filterTitleMain = document.querySelector(".filter-title-main");
+    const filter = document.querySelector(".filter-header");
+    const bookFilter = document.querySelector(".book-filter");
+    const hideButton = document.querySelector(".hide-button");
 
-    // Обработчик клика по заголовку
     if (filterTitleMain) {
-        filterTitleMain.addEventListener("click", function() {
-            // Переключаем видимость формы фильтра
-            if (bookFilter.style.display === "none" || bookFilter.style.display === "") {
-                bookFilter.style.display = "flex";  // Показываем форму
-                filter.style.display = "none";  // Скрываем фильтр
-            } else {
-                bookFilter.style.display = "none";  // Скрываем форму
-                filter.style.display = "flex";  // Показываем фильтр
+        filterTitleMain.addEventListener("click", function () {
+            const isHidden = bookFilter.style.display === "none" || bookFilter.style.display === "";
+            bookFilter.style.display = isHidden ? "flex" : "none";
+            filter.style.display = isHidden ? "none" : "flex";
+        });
+    }
+
+    if (hideButton) {
+        hideButton.addEventListener("click", function () {
+            bookFilter.style.display = "none";
+            filter.style.display = "flex";
+        });
+    }
+}
+
+function initPagination() {
+    const books = document.querySelectorAll(".book");
+    const booksPerPage = 10;
+    let currentPage = 1;
+
+    const prevPageBtn = document.querySelector(".prev-page");
+    const nextPageBtn = document.querySelector(".next-page");
+    const pageSelect = document.querySelector(".page-select");
+    const pageInfo = document.querySelector(".page-info");
+
+    function displayBooks() {
+        books.forEach(book => (book.style.display = "none"));
+
+        const startIndex = (currentPage - 1) * booksPerPage;
+        const endIndex = startIndex + booksPerPage;
+        for (let i = startIndex; i < endIndex && i < books.length; i++) {
+            books[i].style.display = "flex";
+        }
+
+        updatePagination();
+    }
+
+    function updatePagination() {
+        const totalPages = Math.ceil(books.length / booksPerPage);
+        pageInfo.textContent = `Страница ${currentPage} из ${totalPages}`;
+        prevPageBtn.disabled = currentPage === 1;
+        nextPageBtn.disabled = currentPage === totalPages;
+
+        pageSelect.innerHTML = "";
+        for (let i = 1; i <= totalPages; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.textContent = `Страница ${i}`;
+            option.selected = i === currentPage;
+            pageSelect.appendChild(option);
+        }
+    }
+
+    if (prevPageBtn) {
+        prevPageBtn.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayBooks();
             }
         });
-    } else {
-        console.error("Не найден элемент filter-title-main");
     }
 
-    // Обработчик клика по кнопке "Скрыть"
-    if (hideButton) {
-        hideButton.addEventListener("click", function() {
-            bookFilter.style.display = "none";  // Скрываем форму фильтра
-            filter.style.display = "flex";  // Показываем фильтр
+    if (nextPageBtn) {
+        nextPageBtn.addEventListener("click", () => {
+            const totalPages = Math.ceil(books.length / booksPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayBooks();
+            }
         });
-    } else {
-        console.error("Не найдена кнопка скрыть");
     }
-});
+
+    if (pageSelect) {
+        pageSelect.addEventListener("change", (e) => {
+            currentPage = parseInt(e.target.value);
+            displayBooks();
+        });
+    }
+
+    displayBooks();
+}
