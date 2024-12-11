@@ -201,6 +201,7 @@
     text-decoration: none;
     color: #575858;
     font-weight: bold;
+    margin-right: 10px;
 }
 
 .filter-title-main:hover {
@@ -273,6 +274,59 @@
     background-color: #e53935;
 }
 
+.pagination {
+    display: flex;
+    align-items: center;
+}
+  
+.page-info {
+    margin: 0 10px;
+    color: #575858;
+    font-weight: bold;
+}
+  
+.page-button {
+    background-color: #4CAF50; /* Синий цвет кнопки */
+    color: #fff; /* Белый цвет текста */
+    border: none; /* Убираем рамку */
+    border-radius: 5px; /* Скругляем края */
+    padding: 8px 12px; /* Внутренние отступы */
+    font-size: 14px; /* Размер текста */
+    cursor: pointer; /* Изменяем курсор на указатель */
+    margin: 0 5px; /* Отступы между кнопками */
+    transition: background-color 0.3s ease; /* Анимация при наведении */
+}
+
+/* Стиль кнопок при наведении */
+.page-button:hover {
+    background-color: #45a049; /* Более темный синий цвет при наведении */
+}
+
+/* Отключенные кнопки */
+.page-button:disabled {
+    background-color: #cccccc; /* Серый цвет для отключенных кнопок */
+    color: #666666; /* Темно-серый текст */
+    cursor: not-allowed; /* Курсор для отключенных кнопок */
+}
+
+/* Стиль для выпадающего списка (select) */
+.page-select {
+    background-color: #f8f9fa; /* Светло-серый фон */
+    color: #333; /* Темный цвет текста */
+    border: 1px solid #ccc; /* Легкая рамка */
+    border-radius: 5px; /* Скругление углов */
+    padding: 8px; /* Внутренние отступы */
+    font-size: 14px; /* Размер шрифта */
+    cursor: pointer; /* Курсор указателя */
+    margin-left: 10px; /* Отступ слева от других элементов */
+    transition: border-color 0.3s ease; /* Анимация рамки */
+}
+
+/* Изменение рамки при фокусе */
+.page-select:focus {
+    border-color: #4CAF50; /* Синий цвет рамки */
+    outline: none; /* Убираем стандартный outline */
+}
 
 .book-list {
     display: flex;
