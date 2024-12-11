@@ -38,6 +38,36 @@
                 <button class="search-button">Поиск</button>
             </div>
         </div>
+        <div class="filter-header">
+            <img src="/images/filter_icon.png" alt="Иконка фильтра" class="filter-icon">
+            <a href="#" class="filter-title-main">Фильтр</a>
+        </div>
+        <div class="book-filter">
+            <h3 class="filter-title">Фильтр</h3>
+            <form class="filter-form">
+                <div class="input-group">
+                    <label for="author">Автор</label>
+                    <input type="text" id="author" name="author" placeholder="Введите имя автора">
+                </div>
+                <div class="input-group">
+                    <label for="category">Категория</label>
+                    <input type="text" id="category" name="category" placeholder="Введите категорию">
+                </div>
+                <div class="input-group">
+                    <label for="year">Год издания</label>
+                    <input type="text" id="year" name="year" placeholder="Введите год">
+                </div>
+                <div class="input-group">
+                    <label for="udk">УДК</label>
+                    <input type="text" id="udk" name="udk" placeholder="Введите УДК">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-button hide-button">Скрыть</button>
+                    <button type="submit" class="filter-button apply-button">Применить</button>
+                    <button type="reset" class="filter-button reset-button">Сбросить</button>
+                </div>
+            </form>
+        </div>      
         <div class="book-list">
             <div class="book">
                 <h3 class="book-name">Совершенный код</h3>
