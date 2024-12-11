@@ -175,10 +175,104 @@
     background-color: #45a049;
 }
 
-.my-books {
-    font-size: 30px;
+.book-filter {
+    display: none;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    gap: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-header {
+    display: flex;
+    align-items: center;
+}
+
+.filter-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.filter-title-main {
+    margin-left: 3px;
+    text-decoration: none;
+    color: #575858;
+    font-weight: bold;
+}
+
+.filter-title-main:hover {
+    text-decoration: underline;
+}
+
+.filter-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #333;
+    margin: 0;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #555;
+}
+
+.input-group input {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.filter-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
     text-align: center;
 }
+
+.hide-button {
+    background-color: #d4d5d6;
+    color: rgb(146, 145, 145);
+}
+
+.apply-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.reset-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.apply-button:hover {
+    background-color: #45a049;
+}
+
+.reset-button:hover {
+    background-color: #e53935;
+}
+
 
 .book-list {
     display: flex;
@@ -191,7 +285,7 @@
 
 .book {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     flex-wrap: wrap;
     justify-content: space-between;
     background-color: #f9f9f9;
@@ -210,8 +304,8 @@
 .book-name {
     flex-shrink: 0;
     white-space: nowrap;
-    text-align: center;
-    margin: auto;
+    text-align: left;
+    margin: 0;
 }
 
 .line {
@@ -224,12 +318,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-.book-date {
-    flex-grow: 1;
-    margin: auto;
-    color: #383737;
 }
 
 .toggle-details {
