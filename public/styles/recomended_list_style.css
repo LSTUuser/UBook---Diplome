@@ -1,3 +1,8 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
 .recom-body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #f4f4f9;
@@ -14,6 +19,37 @@
     background-color: #4CAF50;
     color: white;
     height: 60px;
+}
+
+.recom-content {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-left: 10px;
+    margin-top: 13px;
+    width: 33%;
+    height: auto;
+    padding: 15px;
+}
+
+.udc-name {
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top: 10px;
+    color: black;
+}
+
+.udc-name:hover {
+    text-decoration: underline;
 }
 
 .header-left {
@@ -108,6 +144,11 @@
 .content {
     margin-left: 15px;
     margin-right: 15px;
+    width: 100%;
+}
+
+.body-title {
+    font-size: 20px;
 }
 
 .body-top {
@@ -276,7 +317,7 @@
 
 .filter-buttons {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     gap: 10px;
     margin-top: 10px;
 }
@@ -361,4 +402,12 @@
 .page-select:focus {
     border-color: #4CAF50;
     outline: none;
+}
+
+.footer {
+    margin-top: auto;
+    background-color: #cccccc;
+    color: #666666;
+    text-align: center;
+    font-size: 13px;
 }

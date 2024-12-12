@@ -28,6 +28,8 @@ html, body {
 }
 
 .sidebar {
+    display: flex;
+    flex-direction: column;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -36,6 +38,18 @@ html, body {
     width: 33%;
     height: auto;
     padding: 15px;
+}
+
+.udc-name {
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top: 10px;
+    color: black;
+}
+
+.udc-name:hover {
+    text-decoration: underline;
 }
 
 .header-left {
@@ -170,7 +184,7 @@ html, body {
 .search-bar {
     display: flex;
     align-items: flex-end;
-    width: 50%;
+    width: 70%;
     align-items: center;
 }
 
@@ -260,7 +274,7 @@ html, body {
 
 .filter-buttons {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     gap: 10px;
     margin-top: 10px;
 }
@@ -418,4 +432,5 @@ html, body {
     background-color: #cccccc;
     color: #666666;
     text-align: center;
+    font-size: 13px;
 }

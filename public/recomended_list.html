@@ -28,81 +28,89 @@
             </div>
         </div>
     </header>
-    <div class="content">
-        <div class="body-top">
-            <div class="user-info">
-                <h1 class="body-title">Список рекомендаций для специальности: <span id="speciality-name">АИ</span></h1>
+    <div class="recom-content">
+        <div class="sidebar">
+            <div class="filter-header">
+                <img src="/images/filter_icon.png" alt="Иконка фильтра" class="filter-icon">
+                <a href="#" class="filter-title-main">Фильтр</a>
             </div>
-            <div class="search-bar">
-                <input type="text" id="search-input" class="search-input" placeholder="Поиск книги...">
-                <button class="search-button">Поиск</button>
+            <div class="book-filter">
+                <h3 class="filter-title">Фильтр</h3>
+                <form class="filter-form">
+                    <div class="input-group">
+                        <label for="author">Автор</label>
+                        <input type="text" id="author" name="author" placeholder="Введите имя автора">
+                    </div>
+                    <div class="input-group">
+                        <label for="category">Категория</label>
+                        <input type="text" id="category" name="category" placeholder="Введите категорию">
+                    </div>
+                    <div class="input-group">
+                        <label for="year">Год издания</label>
+                        <input type="text" id="year" name="year" placeholder="Введите год">
+                    </div>
+                    <div class="input-group">
+                        <label for="udk">УДК</label>
+                        <input type="text" id="udk" name="udk" placeholder="Введите УДК">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-button hide-button">Скрыть</button>
+                        <button type="submit" class="filter-button apply-button">Применить</button>
+                        <button type="reset" class="filter-button reset-button">Сбросить</button>
+                    </div>
+                </form>
             </div>
+            <a href="#" class="udc-name">Качество систем и программ (2)</a>
         </div>
-        <div class="filter-header">
-            <img src="/images/filter_icon.png" alt="Иконка фильтра" class="filter-icon">
-            <a href="#" class="filter-title-main">Фильтр</a>
+        <div class="content">
+            <div class="body-top">
+                <div class="user-info">
+                    <h1 class="body-title">Список рекомендаций для специальности: <span id="speciality-name">АИ</span></h1>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="search-input" class="search-input" placeholder="Поиск книги...">
+                    <button class="search-button">Поиск</button>
+                </div>
+            </div>
             <div class="pagination">
                 <button class="page-button prev-page" disabled>Назад</button>
                 <span class="page-info">Страница 1 из 1</span>
                 <button class="page-button next-page" disabled>Вперед</button>
                 <select class="page-select"></select>
             </div>
-        </div>
-        <div class="book-filter">
-            <h3 class="filter-title">Фильтр</h3>
-            <form class="filter-form">
-                <div class="input-group">
-                    <label for="author">Автор</label>
-                    <input type="text" id="author" name="author" placeholder="Введите имя автора">
-                </div>
-                <div class="input-group">
-                    <label for="category">Категория</label>
-                    <input type="text" id="category" name="category" placeholder="Введите категорию">
-                </div>
-                <div class="input-group">
-                    <label for="year">Год издания</label>
-                    <input type="text" id="year" name="year" placeholder="Введите год">
-                </div>
-                <div class="input-group">
-                    <label for="udk">УДК</label>
-                    <input type="text" id="udk" name="udk" placeholder="Введите УДК">
-                </div>
-                <div class="filter-buttons">
-                    <button class="filter-button hide-button">Скрыть</button>
-                    <button type="submit" class="filter-button apply-button">Применить</button>
-                    <button type="reset" class="filter-button reset-button">Сбросить</button>
-                </div>
-            </form>
-        </div>      
-        <div class="book-list">
-            <div class="book">
-                <h3 class="book-name">Совершенный код</h3>
-                <button class="toggle-details">Больше информации</button>
-                <div class="book-details">
-                    <hr class="line">
-                    <div class="book-description">
-                        <div>Автор: Стив Макконелл</div>
-                        <div>Год издания: 1993</div>
-                        <div>УДК: 004.45</div>
-                        <div>Категория: Качество систем и программ</div>
+            <div class="book-list">
+                <div class="book">
+                    <h3 class="book-name">Совершенный код</h3>
+                    <button class="toggle-details">Больше информации</button>
+                    <div class="book-details">
+                        <hr class="line">
+                        <div class="book-description">
+                            <div>Автор: Стив Макконелл</div>
+                            <div>Год издания: 1993</div>
+                            <div>УДК: 004.45</div>
+                            <div>Категория: Качество систем и программ</div>
+                        </div>
                     </div>
-                </div>
-            </div>   
-            <div class="book">
-                <h3 class="book-name">Искусство Программирования</h3>
-                <button class="toggle-details">Больше информации</button>
-                <div class="book-details">
-                    <hr class="line">
-                    <div class="book-description">
-                        <div>Автор: Дональд Эрвин</div>
-                        <div>Год издания: 1968</div>
-                        <div>УДК: 681.142.2</div>
-                        <div>Категория: Точная механика</div>
+                </div>   
+                <div class="book">
+                    <h3 class="book-name">Искусство Программирования</h3>
+                    <button class="toggle-details">Больше информации</button>
+                    <div class="book-details">
+                        <hr class="line">
+                        <div class="book-description">
+                            <div>Автор: Дональд Эрвин</div>
+                            <div>Год издания: 1968</div>
+                            <div>УДК: 681.142.2</div>
+                            <div>Категория: Точная механика</div>
+                        </div>
                     </div>
-                </div>
-            </div>             
+                </div>             
+            </div>
         </div>
     </div>
+    <footer class="footer">
+        <p>&copy; 2024 UBook. Все права защищены.</p>
+    </footer>
     <script src="app.js"></script>
 </body>
 </html>
