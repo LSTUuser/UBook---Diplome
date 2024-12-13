@@ -30,7 +30,7 @@ function initToggleDetails() {
 
     buttons.forEach(button => {
         button.addEventListener("click", function () {
-            const details = this.nextElementSibling;
+            const details = this.parentElement.parentElement.querySelector(".book-details");
             if (details) {
                 details.style.display = details.style.display === "block" ? "none" : "block";
                 this.textContent = details.style.display === "block" ? "Скрыть информацию" : "Больше информации";
