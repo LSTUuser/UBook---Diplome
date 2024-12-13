@@ -4,14 +4,15 @@ const path = require('path');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Маршрут для обработки логина
+// Маршруты для пользовательского интерфейса
+app.use('/user', express.static(path.join(__dirname, 'public', 'user')));
+
+// Маршруты для административного интерфейса
+app.use('/admin', express.static(path.join(__dirname, 'public', 'admin')));
+
 app.post('/login', (req, res) => {
   res.send('Обработка логина');
 });
-
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
-  });
   
 
 const PORT = process.env.PORT || 3000;
