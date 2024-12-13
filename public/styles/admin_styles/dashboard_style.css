@@ -401,9 +401,9 @@ html, body {
 
 .book {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    justify-content: space-between;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -420,8 +420,20 @@ html, body {
 .book-name {
     flex-shrink: 0;
     white-space: nowrap;
-    text-align: left;
     margin: 0;
+}
+
+.quantity {
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin: 0;
+    margin-right: 5px;
+}
+
+.book-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 .line {
@@ -450,6 +462,38 @@ html, body {
 
 .toggle-details:hover {
     background-color: #45a049;
+}
+
+.edit-button {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #747c74;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.edit-button:hover {
+    background-color: #5e6261;
+}
+
+.delete-button {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.delete-button:hover {
+    background-color: #d32f2f;
 }
 
 .footer {
