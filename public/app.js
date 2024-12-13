@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     initToggleDetails();
     initFilterToggle();
     initPagination();
+    initAddBookMenu();
 });
 
 function initDropdown() {
@@ -40,7 +41,6 @@ function initToggleDetails() {
 
 function initFilterToggle() {
     const filterTitleMain = document.querySelector(".filter-title-main");
-    const filter = document.querySelector(".filter-header");
     const bookFilter = document.querySelector(".book-filter");
     const hideButton = document.querySelector(".hide-button");
 
@@ -48,17 +48,40 @@ function initFilterToggle() {
         filterTitleMain.addEventListener("click", function () {
             const isHidden = bookFilter.style.display === "none" || bookFilter.style.display === "";
             bookFilter.style.display = isHidden ? "flex" : "none";
-            filter.style.display = isHidden ? "none" : "flex";
         });
     }
 
     if (hideButton) {
         hideButton.addEventListener("click", function () {
             bookFilter.style.display = "none";
-            filter.style.display = "flex";
         });
     }
 }
+
+function initAddBookMenu() {
+    // Кнопка "Добавить книгу"
+    const addBookButton = document.querySelector(".add-book-button");
+    // Меню добавления книги
+    const addBookMenu = document.querySelector(".add-book-menu");
+    // Кнопка "Отмена" для закрытия меню
+    const hideButton = document.querySelector(".hide-add-book-button");
+
+    // Открытие меню добавления книги
+    if (addBookButton) {
+        addBookButton.addEventListener("click", function () {
+            const isHidden = addBookMenu.style.display === "none" || addBookMenu.style.display === ""; // Показываем меню
+            addBookMenu.style.display = isHidden ? "flex" : "none";
+        });
+    }
+
+    // Закрытие меню при клике на кнопку "Отмена"
+    if (hideButton) {
+        hideButton.addEventListener("click", function () {
+            addBookMenu.style.display = "none"; // Скрываем меню
+        });
+    }
+}
+
 
 function initPagination() {
     const books = document.querySelectorAll(".book");
