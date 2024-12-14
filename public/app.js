@@ -5,7 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
     initFilterToggle();
     initPagination();
     initAddBookMenu();
-    initEditMenu();
+    initEditBookMenu();
+    initDeleteBook();
 });
 
 function initDropdown() {
@@ -157,7 +158,7 @@ function initPagination() {
 }
 
 // Инициализация функций для редактирования
-function initEditMenu() {
+function initEditBookMenu() {
     const editBookButton = document.querySelector(".edit-button");
     // Меню редактирования книги
     const editBookMenu = document.querySelector(".edit-book-form");
@@ -182,4 +183,43 @@ function initEditMenu() {
             editBook.style.display = "flex";
         });
     }
+}
+
+function initDeleteBook() {
+    const deleteButtons = document.querySelectorAll('.delete-button');
+    const modal = document.getElementById('deleteModal');
+    const cancelDeleteButton = document.getElementById('cancelDelete');
+    const confirmDeleteButton = document.getElementById('confirmDelete');
+    let bookToDelete = null; // Переменная для хранения книги, которую нужно удалить
+
+    // Открытие модального окна при нажатии на кнопку "Удалить"
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            bookToDelete = this.closest('.book'); // Находим ближайший элемент книги
+            modal.style.display = 'flex'; // Показываем модальное окно
+        });
+    });
+
+    // Закрытие модального окна при нажатии на кнопку "Отмена"
+    cancelDeleteButton.addEventListener('click', function () {
+        modal.style.display = 'none'; // Закрываем модальное окно
+        bookToDelete = null; // Сбрасываем переменную
+    });
+
+    // Удаление книги при подтверждении
+    confirmDeleteButton.addEventListener('click', function () {
+        if (bookToDelete) {
+            bookToDelete.remove(); // Удаляем элемент книги
+            modal.style.display = 'none'; // Закрываем модальное окно
+            bookToDelete = null; // Сбрасываем переменную
+        }
+    });
+
+    // Закрытие модального окна, если кликнули вне его
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none'; // Закрываем модальное окно, если кликнули вне
+            bookToDelete = null; // Сбрасываем переменную
+        }
+    });
 }

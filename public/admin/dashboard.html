@@ -166,12 +166,14 @@
                     </div>
                 </div>   
                 <div class="book">
-                    <h3 class="book-name">Искусство Программирования</h3>
-                    <div class="book-buttons">
-                        <h4 class="quantity">Количество: 2</h4>
-                        <button class="edit-button">Редактировать</button>
-                        <button class="delete-button">Удалить</button>
-                        <button class="toggle-details">Больше информации</button>
+                    <div class="book-cover">
+                        <h3 class="book-name">Искусство Программирования</h3>
+                        <div class="book-buttons">
+                            <h4 class="quantity">Количество: 2</h4>
+                            <button class="edit-button">Редактировать</button>
+                            <button class="delete-button">Удалить</button>
+                            <button class="toggle-details">Больше информации</button>
+                        </div>
                     </div>
                     <div class="book-details">
                         <hr class="line">
@@ -185,8 +187,15 @@
                 </div>
                 
                 <div class="book">
-                    <h3 class="book-name">Гражданский процесс: учебное пособие</h3>
-                    <button class="toggle-details">Больше информации</button>
+                    <div class="book-cover">
+                        <h3 class="book-name">Гражданский процесс: учебное пособие</h3>
+                            <div class="book-buttons">
+                            <h4 class="quantity">Количество: 1</h4>
+                            <button class="edit-button">Редактировать</button>
+                            <button class="delete-button">Удалить</button>
+                            <button class="toggle-details">Больше информации</button>
+                        </div>
+                    </div>
                     <div class="book-details">
                         <hr class="line">
                         <div class="book-description">
@@ -198,8 +207,15 @@
                     </div>
                 </div>
                 <div class="book">
-                    <h3 class="book-name">Дипломная работа. Подготовка и оформление</h3>
-                    <button class="toggle-details">Больше информации</button>
+                    <div class="book-cover">
+                        <h3 class="book-name">Дипломная работа. Подготовка и оформление</h3>
+                        <div class="book-buttons">
+                            <h4 class="quantity">Количество: 0</h4>
+                            <button class="edit-button">Редактировать</button>
+                            <button class="delete-button">Удалить</button>
+                            <button class="toggle-details">Больше информации</button>
+                        </div>
+                    </div>
                     <div class="book-details">
                         <hr class="line">
                         <div class="book-description">
@@ -211,8 +227,15 @@
                     </div>
                 </div>
                 <div class="book">
-                    <h3 class="book-name">Дизайнер-верстальщик: самоучитель</h3>
-                    <button class="toggle-details">Больше информации</button>
+                    <div class="book-cover">
+                        <h3 class="book-name">Дизайнер-верстальщик: самоучитель</h3>
+                        <div class="book-buttons">
+                            <h4 class="quantity">Количество: 1</h4>
+                            <button class="edit-button">Редактировать</button>
+                            <button class="delete-button">Удалить</button>
+                            <button class="toggle-details">Больше информации</button>
+                        </div>
+                    </div>
                     <div class="book-details">
                         <hr class="line">
                         <div class="book-description">
@@ -224,8 +247,15 @@
                     </div>
                 </div>
                 <div class="book">
-                    <h3 class="book-name">Фортепиано. Король музыкальных инструментов</h3>
-                    <button class="toggle-details">Больше информации</button>
+                    <div class="book-cover">
+                        <h3 class="book-name">Фортепиано. Король музыкальных инструментов</h3>
+                        <div class="book-buttons">
+                            <h4 class="quantity">Количество: 3</h4>
+                            <button class="edit-button">Редактировать</button>
+                            <button class="delete-button">Удалить</button>
+                            <button class="toggle-details">Больше информации</button>
+                        </div>
+                    </div>
                     <div class="book-details">
                         <hr class="line">
                         <div class="book-description">
@@ -301,6 +331,16 @@
                         </div>
                     </div>
                 </div>                     
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>Вы уверены, что хотите удалить эту книгу?</h3>
+            <div class="modal-buttons">
+                <button id="cancelDelete" class="edit-button">Отмена</button>
+                <button id="confirmDelete" class="delete-button">Удалить</button>
             </div>
         </div>
     </div>
