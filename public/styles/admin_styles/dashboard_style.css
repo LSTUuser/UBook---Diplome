@@ -402,14 +402,21 @@ html, body {
 .book {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     flex-wrap: wrap;
+    align-items: center;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 4px;
     width: 100%;
     padding: 15px;
     gap: 20px;
+}
+
+.book-cover {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .book-details {
@@ -419,20 +426,17 @@ html, body {
 
 .book-name {
     flex-shrink: 0;
-    white-space: nowrap;
     margin: 0;
 }
 
 .quantity {
-    flex-shrink: 0;
-    white-space: nowrap;
     margin: 0;
-    margin-right: 5px;
 }
 
 .book-buttons {
     display: flex;
     gap: 10px;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -478,6 +482,19 @@ html, body {
 
 .edit-button:hover {
     background-color: #5e6261;
+}
+
+.edit-book-form {
+    display: none;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    gap: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    width: 100%;
 }
 
 .delete-button {

@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     initFilterToggle();
     initPagination();
     initAddBookMenu();
+    initEditMenu();
 });
 
 function initDropdown() {
@@ -30,7 +31,8 @@ function initToggleDetails() {
 
     buttons.forEach(button => {
         button.addEventListener("click", function () {
-            const details = this.parentElement.parentElement.querySelector(".book-details");
+            const book = this.closest('.book');
+            const details = book.querySelector(".book-details");
             if (details) {
                 details.style.display = details.style.display === "block" ? "none" : "block";
                 this.textContent = details.style.display === "block" ? "Скрыть информацию" : "Больше информации";
@@ -43,17 +45,21 @@ function initFilterToggle() {
     const filterTitleMain = document.querySelector(".filter-title-main");
     const bookFilter = document.querySelector(".book-filter");
     const hideButton = document.querySelector(".hide-button");
+    const hideTitle = document.querySelector(".filter-header");
 
     if (filterTitleMain) {
         filterTitleMain.addEventListener("click", function () {
             const isHidden = bookFilter.style.display === "none" || bookFilter.style.display === "";
             bookFilter.style.display = isHidden ? "flex" : "none";
+            const isHiddenTitle = hideTitle.style.display === "flex" || hideTitle.style.display === "";
+            hideTitle.style.display = isHiddenTitle ? "none" : "flex";
         });
     }
 
     if (hideButton) {
         hideButton.addEventListener("click", function () {
             bookFilter.style.display = "none";
+            hideTitle.style.display = "flex";
         });
     }
 }
@@ -148,4 +154,32 @@ function initPagination() {
     }
 
     displayBooks();
+}
+
+// Инициализация функций для редактирования
+function initEditMenu() {
+    const editBookButton = document.querySelector(".edit-button");
+    // Меню редактирования книги
+    const editBookMenu = document.querySelector(".edit-book-form");
+    // Кнопка "Отмена" для закрытия меню
+    const hideButton = document.querySelector(".hide-edit-button");
+    const editBook = document.querySelector(".book-cover");
+
+    // Открытие меню редактирования книги
+    if (editBookButton) {
+        editBookButton.addEventListener("click", function () {
+            const isHidden = editBookMenu.style.display === "none" || editBookMenu.style.display === ""; // Показываем меню
+            editBookMenu.style.display = isHidden ? "flex" : "none";
+            const isHiddenBook = editBook.style.display === "flex" || editBook.style.display === ""; // Показываем меню
+            editBook.style.display = isHiddenBook ? "none" : "flex";
+        });
+    }
+
+    // Закрытие меню при клике на кнопку "Отмена"
+    if (hideButton) {
+        hideButton.addEventListener("click", function () {
+            editBookMenu.style.display = "none"; // Скрываем меню
+            editBook.style.display = "flex";
+        });
+    }
 }

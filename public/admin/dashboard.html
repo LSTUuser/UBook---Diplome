@@ -116,12 +116,44 @@
             </div>
             <div class="book-list">
                 <div class="book">
-                    <h3 class="book-name">Совершенный код</h3>
-                    <div class="book-buttons">
-                        <h4 class="quantity">Количество: 1</h4>
-                        <button class="edit-button">Редактировать</button>
-                        <button class="delete-button">Удалить</button>
-                        <button class="toggle-details">Больше информации</button>
+                    <div class="book-cover">
+                        <h3 class="book-name">Совершенный код</h3>
+                        <div class="book-buttons">
+                            <h4 class="quantity">Количество: 1</h4>
+                            <button class="edit-button">Редактировать</button>
+                            <button class="delete-button">Удалить</button>
+                            <button class="toggle-details">Больше информации</button>
+                        </div>
+                    </div>
+                    <div class="edit-book-form">
+                        <h3 class="filter-title">Редактирование книги</h3>
+                        <form class="filter-form">
+                            <div class="input-group">
+                                <label for="edit-name">Название</label>
+                                <input type="text" id="edit-name" name="name" placeholder="Введите название книги">
+                            </div>
+                            <div class="input-group">
+                                <label for="edit-author">Автор</label>
+                                <input type="text" id="edit-author" name="author" placeholder="Введите имя автора">
+                            </div>
+                            <div class="input-group">
+                                <label for="edit-year">Год издания</label>
+                                <input type="text" id="edit-year" name="year" placeholder="Введите год">
+                            </div>
+                            <div class="input-group">
+                                <label for="edit-udk">УДК</label>
+                                <input type="text" id="edit-udk" name="udk" placeholder="Введите УДК">
+                            </div>
+                            <div class="input-group">
+                                <label for="edit-quantity">Количество:</label>
+                                <input type="number" id="edit-quantity" name="quantity" min="1" placeholder="Введите количество">
+                            </div>
+                            <div class="filter-buttons">
+                                <button type="button" class="filter-button hide-button hide-edit-button">Отмена</button>
+                                <button type="submit" class="filter-button apply-button">Сохранить</button>
+                                <button type="reset" class="filter-button reset-button">Сбросить</button>
+                            </div>
+                        </form>
                     </div>
                     <div class="book-details">
                         <hr class="line">
@@ -151,6 +183,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="book">
                     <h3 class="book-name">Гражданский процесс: учебное пособие</h3>
                     <button class="toggle-details">Больше информации</button>
