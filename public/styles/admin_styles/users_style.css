@@ -153,6 +153,7 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    margin-bottom: 2px;
 }
 
 .input-group label {

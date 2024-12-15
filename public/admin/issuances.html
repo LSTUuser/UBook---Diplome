@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles/admin_styles/issuances_style.css">
     <title>Админ-панель - Выдачи - UBook</title>
 </head>
+
 <body class="issuances-body">
     <header class="issuances-header">
         <div class="header-left">
@@ -39,7 +41,8 @@
                     </div>
                     <div class="input-group">
                         <label for="category">Студенческий билет</label>
-                        <input type="text" id="category" name="category" placeholder="Введите номер студенческого билета">
+                        <input type="text" id="category" name="category"
+                            placeholder="Введите номер студенческого билета">
                     </div>
                     <div class="input-group">
                         <label for="year">Группа</label>
@@ -48,6 +51,15 @@
                     <div class="input-group">
                         <label for="udk">Курс</label>
                         <input type="text" id="udk" name="udk" placeholder="Введите курс">
+                    </div>
+                    <h3 class="filter-title date-title">Диапазон дат</h3>
+                    <div class="input-group">
+                        <label for="start-date">Дата начала</label>
+                        <input type="date" id="start-date" name="start-date">
+                    </div>
+                    <div class="input-group">
+                        <label for="end-date">Дата окончания</label>
+                        <input type="date" id="end-date" name="end-date">
                     </div>
                     <div class="filter-buttons">
                         <button type="submit" class="filter-button apply-button">Применить</button>
@@ -70,33 +82,34 @@
                 </div>
             </div>
             <div class="issuance-list">
-                <div class="user item">
-                    <div class="user-cover item-cover">
-                        <h3 class="user-name">Гуцалов Артём Витальевич</h3>
-                        <div class="user-buttons">
+                <div class="issuance item">
+                    <div class="issuance-cover item-cover">
+                        <h3 class="issuance-book-name">Совершенный код</h3>
+                        <p class="issuance-user">Пользователь: Иван Иванов</p>
+                        <p class="issuance-dates">Дата выдачи: 2024-12-01 | Дата возврата: 2024-12-15</p>
+                        <div class="issuance-buttons">
                             <button class="edit-button">Редактировать</button>
                             <button class="delete-button">Удалить</button>
-                            <button class="toggle-details">Больше информации</button>
                         </div>
                     </div>
-                    <div class="edit-user-form edit-item-form">
-                        <h3 class="filter-title">Редактирование пользователя</h3>
+                    <div class="edit-issuance-form edit-item-form">
+                        <h3 class="filter-title">Редактирование выдачи</h3>
                         <form class="filter-form">
                             <div class="input-group">
-                                <label for="edit-name">ФИО</label>
-                                <input type="text" id="edit-name" name="name" placeholder="Введите ФИО пользователя">
+                                <label for="edit-book-name">Название книги</label>
+                                <input type="text" id="edit-book-name" name="book-name" placeholder="Введите название книги">
                             </div>
                             <div class="input-group">
-                                <label for="edit-author">Студенческий билет</label>
-                                <input type="text" id="edit-author" name="author" placeholder="Введите номер студенческого билета пользователя">
+                                <label for="edit-user-name">Имя пользователя</label>
+                                <input type="text" id="edit-user-name" name="user-name" placeholder="Введите имя пользователя">
                             </div>
                             <div class="input-group">
-                                <label for="edit-year">Группа</label>
-                                <input type="text" id="edit-year" name="year" placeholder="Введите группу пользователя">
+                                <label for="edit-issue-date">Дата выдачи</label>
+                                <input type="date" id="edit-issue-date" name="issue-date">
                             </div>
                             <div class="input-group">
-                                <label for="edit-udk">Курс</label>
-                                <input type="text" id="edit-udk" name="udk" placeholder="Введите номер курса пользователя">
+                                <label for="edit-return-date">Дата возврата</label>
+                                <input type="date" id="edit-return-date" name="return-date">
                             </div>
                             <div class="filter-buttons">
                                 <button type="button" class="filter-button hide-button hide-edit-button">Отмена</button>
@@ -104,60 +117,6 @@
                                 <button type="reset" class="filter-button reset-button">Сбросить</button>
                             </div>
                         </form>
-                    </div>
-                    <div class="user-details item-details">
-                        <hr class="line">
-                        <div class="user-description">
-                            <div>Почта: aguczalov@mail.ru</div>
-                            <div>Студенческий билет: 1211060300</div>
-                            <div>Группа: АИ</div>
-                            <div>Курс: 4</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="user item">
-                    <div class="user-cover item-cover">
-                        <h3 class="user-name">Морозов Александр Александрович</h3>
-                        <div class="user-buttons">
-                            <button class="edit-button">Редактировать</button>
-                            <button class="delete-button">Удалить</button>
-                            <button class="toggle-details">Больше информации</button>
-                        </div>
-                    </div>
-                    <div class="edit-user-form edit-item-form">
-                        <h3 class="filter-title">Редактирование пользователя</h3>
-                        <form class="filter-form">
-                            <div class="input-group">
-                                <label for="edit-name">ФИО</label>
-                                <input type="text" id="edit-name" name="name" placeholder="Введите ФИО пользователя">
-                            </div>
-                            <div class="input-group">
-                                <label for="edit-author">Студенческий билет</label>
-                                <input type="text" id="edit-author" name="author" placeholder="Введите номер студенческого билета пользователя">
-                            </div>
-                            <div class="input-group">
-                                <label for="edit-year">Группа</label>
-                                <input type="text" id="edit-year" name="year" placeholder="Введите группу пользователя">
-                            </div>
-                            <div class="input-group">
-                                <label for="edit-udk">Курс</label>
-                                <input type="text" id="edit-udk" name="udk" placeholder="Введите номер курса пользователя">
-                            </div>
-                            <div class="filter-buttons">
-                                <button type="button" class="filter-button hide-button hide-edit-button">Отмена</button>
-                                <button type="submit" class="filter-button apply-button">Сохранить</button>
-                                <button type="reset" class="filter-button reset-button">Сбросить</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="user-details item-details">
-                        <hr class="line">
-                        <div class="user-description">
-                            <div>Почта: morozov@mail.ru</div>
-                            <div>Студенческий билет: 1211060299</div>
-                            <div>Группа: АИ</div>
-                            <div>Курс: 4</div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -169,4 +128,5 @@
     </footer>
     <script src="/app.js"></script>
 </body>
+
 </html>
