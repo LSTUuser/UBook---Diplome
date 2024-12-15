@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", function () {
     initToggleDetails();
     initFilterToggle();
     initPagination();
-    initAddBookMenu();
-    initEditBookMenu();
-    initDeleteBook();
+    initAdditemMenu();
+    initEditItemMenu();
+    initDeleteItem();
 });
 
 function initDropdown() {
@@ -32,8 +32,8 @@ function initToggleDetails() {
 
     buttons.forEach(button => {
         button.addEventListener("click", function () {
-            const book = this.closest('.book');
-            const details = book.querySelector(".book-details");
+            const item = this.closest('.item');
+            const details = item.querySelector(".item-details");
             if (details) {
                 details.style.display = details.style.display === "block" ? "none" : "block";
                 this.textContent = details.style.display === "block" ? "Скрыть информацию" : "Больше информации";
@@ -44,14 +44,14 @@ function initToggleDetails() {
 
 function initFilterToggle() {
     const filterTitleMain = document.querySelector(".filter-title-main");
-    const bookFilter = document.querySelector(".book-filter");
+    const itemFilter = document.querySelector(".item-filter");
     const hideButton = document.querySelector(".hide-button");
     const hideTitle = document.querySelector(".filter-header");
 
     if (filterTitleMain) {
         filterTitleMain.addEventListener("click", function () {
-            const isHidden = bookFilter.style.display === "none" || bookFilter.style.display === "";
-            bookFilter.style.display = isHidden ? "flex" : "none";
+            const isHidden = itemFilter.style.display === "none" || itemFilter.style.display === "";
+            itemFilter.style.display = isHidden ? "flex" : "none";
             const isHiddenTitle = hideTitle.style.display === "flex" || hideTitle.style.display === "";
             hideTitle.style.display = isHiddenTitle ? "none" : "flex";
         });
@@ -59,40 +59,39 @@ function initFilterToggle() {
 
     if (hideButton) {
         hideButton.addEventListener("click", function () {
-            bookFilter.style.display = "none";
+            itemFilter.style.display = "none";
             hideTitle.style.display = "flex";
         });
     }
 }
 
-function initAddBookMenu() {
+function initAdditemMenu() {
     // Кнопка "Добавить книгу"
-    const addBookButton = document.querySelector(".add-book-button");
+    const additemButton = document.querySelector(".add-item-button");
     // Меню добавления книги
-    const addBookMenu = document.querySelector(".add-book-menu");
+    const additemMenu = document.querySelector(".add-item-menu");
     // Кнопка "Отмена" для закрытия меню
-    const hideButton = document.querySelector(".hide-add-book-button");
+    const hideButton = document.querySelector(".hide-add-item-button");
 
     // Открытие меню добавления книги
-    if (addBookButton) {
-        addBookButton.addEventListener("click", function () {
-            const isHidden = addBookMenu.style.display === "none" || addBookMenu.style.display === ""; // Показываем меню
-            addBookMenu.style.display = isHidden ? "flex" : "none";
+    if (additemButton) {
+        additemButton.addEventListener("click", function () {
+            const isHidden = additemMenu.style.display === "none" || additemMenu.style.display === ""; // Показываем меню
+            additemMenu.style.display = isHidden ? "flex" : "none";
         });
     }
 
     // Закрытие меню при клике на кнопку "Отмена"
     if (hideButton) {
         hideButton.addEventListener("click", function () {
-            addBookMenu.style.display = "none"; // Скрываем меню
+            additemMenu.style.display = "none"; // Скрываем меню
         });
     }
 }
 
-
 function initPagination() {
-    const books = document.querySelectorAll(".book");
-    const booksPerPage = 10;
+    const Items = document.querySelectorAll(".item");
+    const ItemsPerPage = 10;
     let currentPage = 1;
 
     const prevPageBtn = document.querySelector(".prev-page");
@@ -100,20 +99,20 @@ function initPagination() {
     const pageSelect = document.querySelector(".page-select");
     const pageInfo = document.querySelector(".page-info");
 
-    function displayBooks() {
-        books.forEach(book => (book.style.display = "none"));
+    function displayItems() {
+        Items.forEach(item => (item.style.display = "none"));
 
-        const startIndex = (currentPage - 1) * booksPerPage;
-        const endIndex = startIndex + booksPerPage;
-        for (let i = startIndex; i < endIndex && i < books.length; i++) {
-            books[i].style.display = "flex";
+        const startIndex = (currentPage - 1) * ItemsPerPage;
+        const endIndex = startIndex + ItemsPerPage;
+        for (let i = startIndex; i < endIndex && i < Items.length; i++) {
+            Items[i].style.display = "flex";
         }
 
         updatePagination();
     }
 
     function updatePagination() {
-        const totalPages = Math.ceil(books.length / booksPerPage);
+        const totalPages = Math.ceil(Items.length / ItemsPerPage);
         pageInfo.textContent = `Страница ${currentPage} из ${totalPages}`;
         prevPageBtn.disabled = currentPage === 1;
         nextPageBtn.disabled = currentPage === totalPages;
@@ -132,17 +131,17 @@ function initPagination() {
         prevPageBtn.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
-                displayBooks();
+                displayItems();
             }
         });
     }
 
     if (nextPageBtn) {
         nextPageBtn.addEventListener("click", () => {
-            const totalPages = Math.ceil(books.length / booksPerPage);
+            const totalPages = Math.ceil(Items.length / ItemsPerPage);
             if (currentPage < totalPages) {
                 currentPage++;
-                displayBooks();
+                displayItems();
             }
         });
     }
@@ -150,52 +149,57 @@ function initPagination() {
     if (pageSelect) {
         pageSelect.addEventListener("change", (e) => {
             currentPage = parseInt(e.target.value);
-            displayBooks();
+            displayItems();
         });
     }
 
-    displayBooks();
+    displayItems();
 }
 
-// Инициализация функций для редактирования
-function initEditBookMenu() {
-    const editBookButton = document.querySelector(".edit-button");
-    // Меню редактирования книги
-    const editBookMenu = document.querySelector(".edit-book-form");
-    // Кнопка "Отмена" для закрытия меню
-    const hideButton = document.querySelector(".hide-edit-button");
-    const editBook = document.querySelector(".book-cover");
+function initEditItemMenu() {
+    const editButtons = document.querySelectorAll(".edit-button");
 
-    // Открытие меню редактирования книги
-    if (editBookButton) {
-        editBookButton.addEventListener("click", function () {
-            const isHidden = editBookMenu.style.display === "none" || editBookMenu.style.display === ""; // Показываем меню
-            editBookMenu.style.display = isHidden ? "flex" : "none";
-            const isHiddenBook = editBook.style.display === "flex" || editBook.style.display === ""; // Показываем меню
-            editBook.style.display = isHiddenBook ? "none" : "flex";
+    editButtons.forEach(editButton => {
+        editButton.addEventListener("click", function () {
+            const user = this.closest('.item'); // Находим контейнер пользователя
+            const editItemMenu = user.querySelector(".edit-item-form"); // Меню редактирования этого пользователя
+            const editItem = user.querySelector(".item-cover"); // Отображение этого пользователя
+
+            // Переключение видимости меню и информации
+            const isHidden = editItemMenu.style.display === "none" || editItemMenu.style.display === "";
+            editItemMenu.style.display = isHidden ? "flex" : "none";
+            editItem.style.display = isHidden ? "none" : "flex";
         });
-    }
+    });
 
-    // Закрытие меню при клике на кнопку "Отмена"
-    if (hideButton) {
+    const hideButtons = document.querySelectorAll(".hide-edit-button");
+
+    hideButtons.forEach(hideButton => {
         hideButton.addEventListener("click", function () {
-            editBookMenu.style.display = "none"; // Скрываем меню
-            editBook.style.display = "flex";
+            const user = this.closest('.item'); // Находим контейнер пользователя
+            const editItemMenu = user.querySelector(".edit-item-form"); // Меню редактирования этого пользователя
+            const editItem = user.querySelector(".item-cover"); // Отображение этого пользователя
+
+            // Скрытие меню и показ информации
+            editItemMenu.style.display = "none";
+            editItem.style.display = "flex";
         });
-    }
+    });
 }
 
-function initDeleteBook() {
+
+
+function initDeleteItem() {
     const deleteButtons = document.querySelectorAll('.delete-button');
     const modal = document.getElementById('deleteModal');
     const cancelDeleteButton = document.getElementById('cancelDelete');
     const confirmDeleteButton = document.getElementById('confirmDelete');
-    let bookToDelete = null; // Переменная для хранения книги, которую нужно удалить
+    let itemToDelete = null; // Переменная для хранения книги, которую нужно удалить
 
     // Открытие модального окна при нажатии на кнопку "Удалить"
     deleteButtons.forEach(button => {
         button.addEventListener('click', function () {
-            bookToDelete = this.closest('.book'); // Находим ближайший элемент книги
+            itemToDelete = this.closest('.item'); // Находим ближайший элемент книги
             modal.style.display = 'flex'; // Показываем модальное окно
         });
     });
@@ -203,15 +207,15 @@ function initDeleteBook() {
     // Закрытие модального окна при нажатии на кнопку "Отмена"
     cancelDeleteButton.addEventListener('click', function () {
         modal.style.display = 'none'; // Закрываем модальное окно
-        bookToDelete = null; // Сбрасываем переменную
+        itemToDelete = null; // Сбрасываем переменную
     });
 
     // Удаление книги при подтверждении
     confirmDeleteButton.addEventListener('click', function () {
-        if (bookToDelete) {
-            bookToDelete.remove(); // Удаляем элемент книги
+        if (itemToDelete) {
+            itemToDelete.remove(); // Удаляем элемент книги
             modal.style.display = 'none'; // Закрываем модальное окно
-            bookToDelete = null; // Сбрасываем переменную
+            itemToDelete = null; // Сбрасываем переменную
         }
     });
 
@@ -219,7 +223,7 @@ function initDeleteBook() {
     window.addEventListener('click', function(event) {
         if (event.target === modal) {
             modal.style.display = 'none'; // Закрываем модальное окно, если кликнули вне
-            bookToDelete = null; // Сбрасываем переменную
+            itemToDelete = null; // Сбрасываем переменную
         }
     });
 }
