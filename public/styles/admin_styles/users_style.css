@@ -446,9 +446,10 @@ html, body {
 }
 
 .modal-content {
-    background-color: #fff;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     padding: 20px;
-    border-radius: 5px;
     width: 300px;
     text-align: center;
 }

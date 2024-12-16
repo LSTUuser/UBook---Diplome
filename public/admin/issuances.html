@@ -32,6 +32,7 @@
 
     <div class="issuances-content">
         <div class="sidebar">
+            <button id="openModalButton" class="open-modal-button">Добавить выдачу</button>
             <div class="issuance-filter form-header">
                 <h3 class="filter-title form-title">Фильтр</h3>
                 <form class="filter-form">
@@ -81,15 +82,24 @@
                     <button class="search-button">Поиск</button>
                 </div>
             </div>
+            <div class="issuance-info">
+                <p class="issuance-column">Номер выдачи</p>
+                <p class="issuance-column">ФИО получателя</p>
+                <p class="issuance-column">Дата выдачи</p>
+                <p class="issuance-column">Дата возврата</p>
+                <p class="issuance-column-actions">Действия</p>
+            </div>
             <div class="issuance-list">
                 <div class="issuance item">
                     <div class="issuance-cover item-cover">
-                        <h3 class="issuance-book-name">Совершенный код</h3>
-                        <p class="issuance-user">Пользователь: Иван Иванов</p>
-                        <p class="issuance-dates">Дата выдачи: 2024-12-01 | Дата возврата: 2024-12-15</p>
+                        <p class="issuance-id">1</p>
+                        <p class="issuance-user">Гуцалов Артём Витальевич</p>
+                        <p class="issuance-dates">01-12-2024</p>
+                        <p class="issuance-dates">01-12-2024</p>
                         <div class="issuance-buttons">
                             <button class="edit-button">Редактировать</button>
                             <button class="delete-button">Удалить</button>
+                            <button class="toggle-details">Больше информации</button>
                         </div>
                     </div>
                     <div class="edit-issuance-form edit-item-form">
@@ -97,11 +107,13 @@
                         <form class="filter-form">
                             <div class="input-group">
                                 <label for="edit-book-name">Название книги</label>
-                                <input type="text" id="edit-book-name" name="book-name" placeholder="Введите название книги">
+                                <input type="text" id="edit-book-name" name="book-name"
+                                    placeholder="Введите название книги">
                             </div>
                             <div class="input-group">
                                 <label for="edit-user-name">Имя пользователя</label>
-                                <input type="text" id="edit-user-name" name="user-name" placeholder="Введите имя пользователя">
+                                <input type="text" id="edit-user-name" name="user-name"
+                                    placeholder="Введите имя пользователя">
                             </div>
                             <div class="input-group">
                                 <label for="edit-issue-date">Дата выдачи</label>
@@ -118,7 +130,133 @@
                             </div>
                         </form>
                     </div>
+                    <div class="issuance-details item-details">
+                        <hr class="line">
+                        <div class="book-name">
+                            Книга: Совершенный код
+                        </div>
+                        <div class="issuance-description">
+                            <div class="book-author">Автор: Стив Макконелл</div>
+                            <div class="year_of_publishing">Год издания: 1993</div>
+                            <div class="udc">УДК: 004.45</div>
+                            <div class="category">Категория: Cистемное программное обеспечение</div>
+                        </div>
+                        <div class="book-name">
+                            Книга: Искусство Программирования
+                        </div>
+                        <div class="issuance-description">
+                            <div class="book-author">Автор: Дональд Эрвин</div>
+                            <div class="year_of_publishing">Год издания: 1968</div>
+                            <div class="udc">УДК: 681.142.2</div>
+                            <div class="category">Категория: Точная механика</div>
+                        </div>
+                    </div>
                 </div>
+                <div class="issuance item">
+                    <div class="issuance-cover item-cover">
+                        <p class="issuance-id">2</p>
+                        <p class="issuance-user">Морозов Александр Александрович</p>
+                        <p class="issuance-dates">12-11-2024</p>
+                        <p class="issuance-dates">-</p>
+                        <div class="issuance-buttons">
+                            <button class="edit-button">Редактировать</button>
+                            <button class="delete-button">Удалить</button>
+                            <button class="toggle-details">Больше информации</button>
+                        </div>
+                    </div>
+                    <div class="edit-issuance-form edit-item-form">
+                        <h3 class="filter-title">Редактирование выдачи</h3>
+                        <form class="filter-form">
+                            <div class="input-group">
+                                <label for="edit-book-name">Название книги</label>
+                                <input type="text" id="edit-book-name" name="book-name"
+                                    placeholder="Введите название книги">
+                            </div>
+                            <div class="input-group">
+                                <label for="edit-user-name">Имя пользователя</label>
+                                <input type="text" id="edit-user-name" name="user-name"
+                                    placeholder="Введите имя пользователя">
+                            </div>
+                            <div class="input-group">
+                                <label for="edit-issue-date">Дата выдачи</label>
+                                <input type="date" id="edit-issue-date" name="issue-date">
+                            </div>
+                            <div class="input-group">
+                                <label for="edit-return-date">Дата возврата</label>
+                                <input type="date" id="edit-return-date" name="return-date">
+                            </div>
+                            <div class="filter-buttons">
+                                <button type="button" class="filter-button hide-button hide-edit-button">Отмена</button>
+                                <button type="submit" class="filter-button apply-button">Сохранить</button>
+                                <button type="reset" class="filter-button reset-button">Сбросить</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="issuance-details item-details">
+                        <hr class="line">
+                        <div class="book-name">
+                            Книга: Совершенный код
+                        </div>
+                        <div class="issuance-description">
+                            <div class="book-author">Автор: Стив Макконелл</div>
+                            <div class="year_of_publishing">Год издания: 1993</div>
+                            <div class="udc">УДК: 004.45</div>
+                            <div class="category">Категория: Cистемное программное обеспечение</div>
+                        </div>
+                        <div class="book-name">
+                            Книга: Искусство Программирования
+                        </div>
+                        <div class="issuance-description">
+                            <div class="book-author">Автор: Дональд Эрвин</div>
+                            <div class="year_of_publishing">Год издания: 1968</div>
+                            <div class="udc">УДК: 681.142.2</div>
+                            <div class="category">Категория: Точная механика</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addItemModal" class="modal">
+        <div class="add-modal-content">
+            <h3 class="filter-title">Добавление выдачи</h3>
+            <form class="filter-form">
+                <div class="input-group">
+                    <label for="group">Получатель</label>
+                    <input type="text" id="group" name="group" list="group-options" required>
+                    <datalist id="group-options">
+                        <option value="Гуцалов Артём Витальевич">
+                        <option value="Морозов Александр Александрович">
+                    </datalist>
+                </div>
+                <div class="input-group">
+                    <label for="start-date">Дата выдачи</label>
+                    <input type="date" id="start-date" name="start-date">
+                </div>
+                <div class="add-title">
+                    <label for="book">Книга</label>
+                    <img src="/images/add_icon.png" alt="Добавить" class="add-icon">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="udk" name="udk" placeholder="Введите название книги">
+                </div>
+                <div class="filter-buttons">
+                    <button id="closeModalButton"
+                        class="filter-button hide-button hide-add-book-button hide-add-item-button">Отмена</button>
+                    <button type="submit" class="filter-button apply-button">Добавить</button>
+                    <button type="reset" class="filter-button reset-button">Сбросить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal">
+        <div class="delete-modal-content">
+            <h3>Вы уверены, что хотите удалить эту выдачу?</h3>
+            <div class="modal-buttons">
+                <button id="cancelDelete" class="edit-button">Отмена</button>
+                <button id="confirmDelete" class="delete-button">Удалить</button>
             </div>
         </div>
     </div>

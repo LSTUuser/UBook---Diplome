@@ -363,7 +363,7 @@ html, body {
     outline: none; /* Убираем стандартный outline */
 }
 
-.add-book-button {
+.open-modal-button {
     margin-left: 10px;
     background-color: #335c35;
     color: #fff;
@@ -375,20 +375,8 @@ html, body {
     transition: background-color 0.3s ease;
 }
 
-.add-book-button:hover {
+.open-modal-button:hover {
     background-color: #38863c;
-}
-
-.add-book-menu {
-    display: none;
-    flex-direction: column;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 15px;
-    gap: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-top: 10px;
 }
 
 .book-list {
@@ -528,10 +516,24 @@ html, body {
     align-items: center;
 }
 
-.modal-content {
-    background-color: #fff;
+.add-modal-content {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    gap: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    width: 60%;
+}
+
+.delete-modal-content {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     padding: 20px;
-    border-radius: 5px;
     width: 300px;
     text-align: center;
 }
