@@ -82,37 +82,7 @@
                 <span class="page-info">Страница 1 из 1</span>
                 <button class="page-button next-page" disabled>Вперед</button>
                 <select class="page-select"></select>
-                <button class="add-book-button add-item-button">Добавить книгу</button>
-            </div>
-            <div class="add-book-menu add-item-menu">
-                <h3 class="filter-title">Добавление книги</h3>
-                <form class="filter-form">
-                    <div class="input-group">
-                        <label for="name">Название</label>
-                        <input type="text" id="name" name="name" placeholder="Введите название книги">
-                    </div>
-                    <div class="input-group">
-                        <label for="author">Автор</label>
-                        <input type="text" id="author" name="author" placeholder="Введите имя автора">
-                    </div>
-                    <div class="input-group">
-                        <label for="year">Год издания</label>
-                        <input type="text" id="year" name="year" placeholder="Введите год">
-                    </div>
-                    <div class="input-group">
-                        <label for="udk">УДК</label>
-                        <input type="text" id="udk" name="udk" placeholder="Введите УДК">
-                    </div>
-                    <div class="input-group">
-                        <label for="quantity">Количество:</label>
-                        <input type="number" id="quantity" name="quantity" min="1" placeholder="Введите количество">
-                    </div>
-                    <div class="filter-buttons">
-                        <button class="filter-button hide-button hide-add-book-button hide-add-item-button">Отмена</button>
-                        <button type="submit" class="filter-button apply-button">Добавить</button>
-                        <button type="reset" class="filter-button reset-button">Сбросить</button>
-                    </div>
-                </form>
+                <button id="openModalButton" class="open-modal-button">Добавить книгу</button>
             </div>
             <div class="book-list">
                 <div class="book item">
@@ -378,8 +348,41 @@
         </div>
     </div>
 
+    <div id="addItemModal" class="modal">
+        <div class="add-modal-content">
+            <h3 class="filter-title">Добавление книги</h3>
+            <form class="filter-form">
+                <div class="input-group">
+                    <label for="name">Название</label>
+                    <input type="text" id="name" name="name" placeholder="Введите название книги">
+                </div>
+                <div class="input-group">
+                    <label for="author">Автор</label>
+                    <input type="text" id="author" name="author" placeholder="Введите имя автора">
+                </div>
+                <div class="input-group">
+                    <label for="year">Год издания</label>
+                    <input type="text" id="year" name="year" placeholder="Введите год">
+                </div>
+                <div class="input-group">
+                    <label for="udk">УДК</label>
+                    <input type="text" id="udk" name="udk" placeholder="Введите УДК">
+                </div>
+                <div class="input-group">
+                    <label for="quantity">Количество:</label>
+                    <input type="number" id="quantity" name="quantity" min="1" placeholder="Введите количество">
+                </div>
+                <div class="filter-buttons">
+                    <button id="closeModalButton" class="filter-button hide-button hide-add-book-button hide-add-item-button">Отмена</button>
+                    <button type="submit" class="filter-button apply-button">Добавить</button>
+                    <button type="reset" class="filter-button reset-button">Сбросить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div id="deleteModal" class="modal">
-        <div class="modal-content">
+        <div class="delete-modal-content">
             <h3>Вы уверены, что хотите удалить эту книгу?</h3>
             <div class="modal-buttons">
                 <button id="cancelDelete" class="edit-button">Отмена</button>

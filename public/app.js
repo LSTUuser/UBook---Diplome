@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", function () {
     initToggleDetails();
     initFilterToggle();
     initPagination();
-    initAdditemMenu();
     initEditItemMenu();
     initDeleteItem();
+    initAddItem();
 });
 
 function initDropdown() {
@@ -61,30 +61,6 @@ function initFilterToggle() {
         hideButton.addEventListener("click", function () {
             itemFilter.style.display = "none";
             hideTitle.style.display = "flex";
-        });
-    }
-}
-
-function initAdditemMenu() {
-    // Кнопка "Добавить книгу"
-    const additemButton = document.querySelector(".add-item-button");
-    // Меню добавления книги
-    const additemMenu = document.querySelector(".add-item-menu");
-    // Кнопка "Отмена" для закрытия меню
-    const hideButton = document.querySelector(".hide-add-item-button");
-
-    // Открытие меню добавления книги
-    if (additemButton) {
-        additemButton.addEventListener("click", function () {
-            const isHidden = additemMenu.style.display === "none" || additemMenu.style.display === ""; // Показываем меню
-            additemMenu.style.display = isHidden ? "flex" : "none";
-        });
-    }
-
-    // Закрытие меню при клике на кнопку "Отмена"
-    if (hideButton) {
-        hideButton.addEventListener("click", function () {
-            additemMenu.style.display = "none"; // Скрываем меню
         });
     }
 }
@@ -220,10 +196,34 @@ function initDeleteItem() {
     });
 
     // Закрытие модального окна, если кликнули вне его
-    window.addEventListener('click', function(event) {
+    window.addEventListener('click', function (event) {
         if (event.target === modal) {
             modal.style.display = 'none'; // Закрываем модальное окно, если кликнули вне
             itemToDelete = null; // Сбрасываем переменную
         }
     });
+}
+
+function initAddItem() {
+   // Получаем элементы
+const modal = document.getElementById("addItemModal");
+const openModalButton = document.getElementById("openModalButton");
+const closeModalButton = document.getElementById("closeModalButton");
+
+// Открыть модальное окно
+openModalButton.onclick = function() {
+    modal.style.display = "flex";
+}
+
+// Закрыть модальное окно
+closeModalButton.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Закрыть модальное окно, если пользователь кликнул вне окна
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 }
