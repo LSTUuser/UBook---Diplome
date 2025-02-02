@@ -120,7 +120,7 @@ app.put('/api/books/:id', async (req, res) => {
             WHERE l.book_id = $1;
         `, [bookId]);
 
-        res.json(updatedBook);
+        res.json(result.rows[0]);
     } catch (error) {
         console.error('Ошибка при обновлении книги:', error);
         res.status(500).json({ message: 'Ошибка при обновлении книги' });
