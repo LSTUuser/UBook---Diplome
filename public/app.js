@@ -1,12 +1,189 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Группировка функций
+    fetchBooks().then(() => {
+        initPagination(); // Вызови пагинацию после загрузки книг
+    });
     initDropdown();
-    initToggleDetails();
     initFilterToggle();
-    initPagination();
-    initEditItemMenu();
-    initDeleteItem();
     initAddItem();
+});
+
+// Асинхронная функция загрузки книг
+async function fetchBooks() {
+    try {
+        const response = await fetch('http://localhost:3000/api/books');
+        if (!response.ok) throw new Error('Ошибка при загрузке данных');
+
+        const literature = await response.json();
+        const bookList = document.querySelector('.book-list');
+        bookList.innerHTML = ''; // Очистка списка перед вставкой новых данных
+
+        literature.forEach(book => {
+            const bookItem = createBookElement(book);
+            bookList.appendChild(bookItem);
+        });
+
+    } catch (error) {
+        console.error('Ошибка загрузки книг:', error);
+    }
+}
+
+// Функция создания элемента книги
+function createBookElement(book) {
+    const bookItem = document.createElement('div');
+    bookItem.classList.add('book', 'item');
+    bookItem.dataset.id = book.book_id; // Сохраняем ID книги
+
+    bookItem.innerHTML = `
+    <div class="book-cover item-cover">
+        <h3 class="book-name">${book.book_name}</h3>
+        <div class="book-buttons">
+            <h4 class="quantity">Количество: ${book.quantity}</h4>
+            <button class="edit-button">Редактировать</button>
+            <button class="delete-button">Удалить</button>
+            <button class="toggle-details">Больше информации</button>
+        </div>
+    </div>
+    <div class="edit-book-form edit-item-form">
+        <h3 class="filter-title">Редактирование книги</h3>
+        <form class="filter-form">
+            <div class="input-group">
+                <label for="edit-name">Название</label>
+                <input type="text" name="name" placeholder="Введите название книги" value="${book.book_name}">
+            </div>
+            <div class="input-group">
+                <label for="edit-author">Автор</label>
+                <input type="text" name="author" placeholder="Введите имя автора" value="${book.author_full_name}">
+            </div>
+            <div class="input-group">
+                <label for="edit-year">Год издания</label>
+                <input type="text" name="year" placeholder="Введите год" value="${book.year_of_publishing}">
+            </div>
+            <div class="input-group">
+                <label for="edit-udk">УДК</label>
+                <input type="text" name="udk" placeholder="Введите УДК" value="${book.udc_id}">
+            </div>
+            <div class="input-group">
+                <label for="edit-quantity">Количество:</label>
+                <input type="number" name="quantity" min="1" placeholder="Введите количество" value="${book.quantity}">
+            </div>
+            <div class="filter-buttons">
+                <button type="button" class="filter-button hide-button hide-edit-button">Отмена</button>
+                <button type="submit" class="filter-button apply-button">Сохранить</button>
+                <button type="reset" class="filter-button reset-button">Сбросить</button>
+            </div>
+        </form>
+    </div>
+    <div class="book-details item-details">
+        <hr class="line">
+        <div class="book-description">
+            <div>Автор: ${book.author_full_name}</div>
+            <div>Год издания: ${book.year_of_publishing}</div>
+            <div>УДК: ${book.udc_id}</div>
+            <div>Категория: ${book.udc_name}</div>
+        </div>
+    </div>
+`;
+
+    // Обработчик кнопки "Больше информации"
+    bookItem.querySelector('.toggle-details').addEventListener('click', function () {
+        const details = bookItem.querySelector(".item-details");
+        details.style.display = details.style.display === "block" ? "none" : "block";
+        this.textContent = details.style.display === "block" ? "Скрыть информацию" : "Больше информации";
+    });
+
+    // Обработчик кнопки "Редактировать"
+    bookItem.querySelector('.edit-button').addEventListener('click', function () {
+        bookItem.querySelector('.edit-book-form').style.display = "block";
+        bookItem.querySelector('.item-cover').style.display = "none";
+    });
+
+    // Обработчик кнопки "Отмена" в форме редактирования
+    // Обработчик кнопки "Отмена" в форме редактирования
+    bookItem.querySelector('.hide-edit-button').addEventListener('click', function () {
+        const form = bookItem.querySelector('.edit-item-form form');
+        form.reset(); // Сбросить данные в полях формы
+        bookItem.querySelector('.edit-book-form').style.display = "none";
+        bookItem.querySelector('.item-cover').style.display = "flex";
+    });
+
+    // Обработчик формы редактирования книги
+    bookItem.querySelector('.edit-item-form form').addEventListener('submit', async function (event) {
+        event.preventDefault();
+        await updateBook(bookItem);
+    });
+
+    return bookItem;
+}
+
+// Функция редактирования книги
+async function updateBook(bookItem) {
+    const bookId = bookItem.dataset.id;
+    const formData = new FormData(bookItem.querySelector('.edit-item-form form'));
+
+    const updatedBook = {
+        book_name: formData.get("name"),
+        author_full_name: formData.get("author"),
+        year_of_publishing: formData.get("year"),
+        udc_id: formData.get("udk"),
+        quantity: parseInt(formData.get("quantity"), 10) || 1
+    };
+
+    console.log("Отправляемые данные:", updatedBook);
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/books/${bookId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedBook)
+        });
+
+        if (!response.ok) throw new Error('Ошибка при обновлении книги');
+
+        console.log("Книга обновлена");
+        await fetchBooks(); // Перезагрузка списка книг
+
+    } catch (error) {
+        console.error('Ошибка при обновлении книги:', error);
+    }
+}
+
+//Удалить
+const deleteButtons = document.querySelectorAll('.delete-button');
+const modal = document.getElementById('deleteModal');
+const cancelDeleteButton = document.getElementById('cancelDelete');
+const confirmDeleteButton = document.getElementById('confirmDelete');
+let itemToDelete = null; // Переменная для хранения книги, которую нужно удалить
+
+// Открытие модального окна при нажатии на кнопку "Удалить"
+deleteButtons.forEach(button => {
+    button.addEventListener('click', function () {
+        itemToDelete = this.closest('.item'); // Находим ближайший элемент книги
+        modal.style.display = 'flex'; // Показываем модальное окно
+    });
+});
+
+// Закрытие модального окна при нажатии на кнопку "Отмена"
+cancelDeleteButton.addEventListener('click', function () {
+    modal.style.display = 'none'; // Закрываем модальное окно
+    itemToDelete = null; // Сбрасываем переменную
+});
+
+// Удаление книги при подтверждении
+confirmDeleteButton.addEventListener('click', function () {
+    if (itemToDelete) {
+        itemToDelete.remove(); // Удаляем элемент книги
+        modal.style.display = 'none'; // Закрываем модальное окно
+        itemToDelete = null; // Сбрасываем переменную
+    }
+});
+
+// Закрытие модального окна, если кликнули вне его
+window.addEventListener('click', function (event) {
+    if (event.target === modal) {
+        modal.style.display = 'none'; // Закрываем модальное окно, если кликнули вне
+        itemToDelete = null; // Сбрасываем переменную
+    }
 });
 
 function initDropdown() {
@@ -25,21 +202,6 @@ function initDropdown() {
             }
         });
     }
-}
-
-function initToggleDetails() {
-    const buttons = document.querySelectorAll(".toggle-details");
-
-    buttons.forEach(button => {
-        button.addEventListener("click", function () {
-            const item = this.closest('.item');
-            const details = item.querySelector(".item-details");
-            if (details) {
-                details.style.display = details.style.display === "block" ? "none" : "block";
-                this.textContent = details.style.display === "block" ? "Скрыть информацию" : "Больше информации";
-            }
-        });
-    });
 }
 
 function initFilterToggle() {
@@ -132,98 +294,26 @@ function initPagination() {
     displayItems();
 }
 
-function initEditItemMenu() {
-    const editButtons = document.querySelectorAll(".edit-button");
-
-    editButtons.forEach(editButton => {
-        editButton.addEventListener("click", function () {
-            const user = this.closest('.item'); // Находим контейнер пользователя
-            const editItemMenu = user.querySelector(".edit-item-form"); // Меню редактирования этого пользователя
-            const editItem = user.querySelector(".item-cover"); // Отображение этого пользователя
-
-            // Переключение видимости меню и информации
-            const isHidden = editItemMenu.style.display === "none" || editItemMenu.style.display === "";
-            editItemMenu.style.display = isHidden ? "flex" : "none";
-            editItem.style.display = isHidden ? "none" : "flex";
-        });
-    });
-
-    const hideButtons = document.querySelectorAll(".hide-edit-button");
-
-    hideButtons.forEach(hideButton => {
-        hideButton.addEventListener("click", function () {
-            const user = this.closest('.item'); // Находим контейнер пользователя
-            const editItemMenu = user.querySelector(".edit-item-form"); // Меню редактирования этого пользователя
-            const editItem = user.querySelector(".item-cover"); // Отображение этого пользователя
-
-            // Скрытие меню и показ информации
-            editItemMenu.style.display = "none";
-            editItem.style.display = "flex";
-        });
-    });
-}
-
-
-
-function initDeleteItem() {
-    const deleteButtons = document.querySelectorAll('.delete-button');
-    const modal = document.getElementById('deleteModal');
-    const cancelDeleteButton = document.getElementById('cancelDelete');
-    const confirmDeleteButton = document.getElementById('confirmDelete');
-    let itemToDelete = null; // Переменная для хранения книги, которую нужно удалить
-
-    // Открытие модального окна при нажатии на кнопку "Удалить"
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            itemToDelete = this.closest('.item'); // Находим ближайший элемент книги
-            modal.style.display = 'flex'; // Показываем модальное окно
-        });
-    });
-
-    // Закрытие модального окна при нажатии на кнопку "Отмена"
-    cancelDeleteButton.addEventListener('click', function () {
-        modal.style.display = 'none'; // Закрываем модальное окно
-        itemToDelete = null; // Сбрасываем переменную
-    });
-
-    // Удаление книги при подтверждении
-    confirmDeleteButton.addEventListener('click', function () {
-        if (itemToDelete) {
-            itemToDelete.remove(); // Удаляем элемент книги
-            modal.style.display = 'none'; // Закрываем модальное окно
-            itemToDelete = null; // Сбрасываем переменную
-        }
-    });
-
-    // Закрытие модального окна, если кликнули вне его
-    window.addEventListener('click', function (event) {
-        if (event.target === modal) {
-            modal.style.display = 'none'; // Закрываем модальное окно, если кликнули вне
-            itemToDelete = null; // Сбрасываем переменную
-        }
-    });
-}
-
 function initAddItem() {
-   // Получаем элементы
-const modal = document.getElementById("addItemModal");
-const openModalButton = document.getElementById("openModalButton");
-const closeModalButton = document.getElementById("closeModalButton");
+    // Получаем элементы
+    const modal = document.getElementById("addItemModal");
+    const openModalButton = document.getElementById("openModalButton");
+    const closeModalButton = document.getElementById("closeModalButton");
 
-// Открыть модальное окно
-openModalButton.onclick = function() {
-    modal.style.display = "flex";
-}
+    // Открыть модальное окно
+    openModalButton.onclick = function () {
+        modal.style.display = "flex";
+    }
 
-// Закрыть модальное окно
-closeModalButton.onclick = function() {
-    modal.style.display = "none";
-}
-
-// Закрыть модальное окно, если пользователь кликнул вне окна
-window.onclick = function(event) {
-    if (event.target == modal) {
+    // Закрыть модальное окно
+    closeModalButton.onclick = function () {
         modal.style.display = "none";
     }
-}
+
+    // Закрыть модальное окно, если пользователь кликнул вне окна
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 }
