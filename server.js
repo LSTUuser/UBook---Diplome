@@ -75,21 +75,21 @@ app.get('/api/books', async (req, res) => {
 });
 
 // Проверка существования УДК по ID
-app.get('/api/udc/:id', async (req, res) => {
-    const { id } = req.params; // Получаем id из параметров URL
-    try {
-        const result = await pool.query('SELECT 1 FROM udc WHERE udc_id = $1', [id]);
+// app.get('/api/udc/:id', async (req, res) => {
+//     const { id } = req.params; // Получаем id из параметров URL
+//     try {
+//         const result = await pool.query('SELECT 1 FROM udc WHERE udc_id = $1', [id]);
         
-        if (result.rows.length === 0) {
-            return res.status(404).json({ message: 'УДК не найдено в базе данных' });
-        }
+//         if (result.rows.length === 0) {
+//             return res.status(404).json({ message: 'УДК не найдено в базе данных' });
+//         }
 
-        res.json({ message: 'УДК существует' }); // Возвращаем подтверждение, что УДК найдено
-    } catch (error) {
-        console.error('Ошибка при проверке УДК:', error);
-        res.status(500).json({ message: 'Ошибка сервера при проверке УДК' });
-    }
-});
+//         res.json({ message: 'УДК существует' }); // Возвращаем подтверждение, что УДК найдено
+//     } catch (error) {
+//         console.error('Ошибка при проверке УДК:', error);
+//         res.status(500).json({ message: 'Ошибка сервера при проверке УДК' });
+//     }
+// });
 
 
 app.put('/api/books/:id', async (req, res) => {
@@ -112,13 +112,6 @@ app.put('/api/books/:id', async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'Книга не найдена' });
         }
-        // Получаем обновленную категорию
-        const categoryResult = await pool.query(`
-            SELECT u.udc_name 
-            FROM literature l
-            JOIN udc u ON l.udc_id = u.udc_id
-            WHERE l.book_id = $1;
-        `, [bookId]);
 
         res.json(result.rows[0]);
     } catch (error) {
