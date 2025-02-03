@@ -113,6 +113,13 @@ function createBookElement(book) {
         await updateBook(bookItem);
     });
 
+    // Обработчик кнопки "Сбросить" в форме редактирования
+    bookItem.querySelector('.edit-item-form form').addEventListener('reset', function () {
+        const udcInput = bookItem.querySelector('[name="udk"]');
+        udcInput.setCustomValidity(""); // Сбрасываем кастомное сообщение об ошибке
+        udcInput.reportValidity(); // Обновляем состояние валидации
+    });
+
     return bookItem;
 }
 
@@ -131,6 +138,7 @@ async function updateBook(bookItem) {
 
     console.log("Отправляемые данные:", updatedBook);
 
+
     try {
         const response = await fetch(`http://localhost:3000/api/books/${bookId}`, {
             method: 'PUT',
@@ -138,7 +146,18 @@ async function updateBook(bookItem) {
             body: JSON.stringify(updatedBook)
         });
 
-        if (!response.ok) throw new Error('Ошибка при обновлении книги');
+        if (!response.ok) {
+            const udcInput = bookItem.querySelector('[name="udk"]');
+            udcInput.setCustomValidity("УДК не найдено");
+            udcInput.reportValidity();
+
+            // Добавляем обработчик, чтобы ошибка сбрасывалась при изменении поля
+            udcInput.addEventListener("input", function () {
+                udcInput.setCustomValidity("");
+            });
+
+            throw new Error('Ошибка при обновлении книги')
+        };
 
         console.log("Книга обновлена");
         await fetchBooks(); // Перезагрузка списка книг
