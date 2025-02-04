@@ -8,13 +8,19 @@ document.addEventListener("DOMContentLoaded", function () {
     initAddItem();
 });
 
+function sortBooks(literature) {
+    return literature.sort((a, b) => a.book_id - b.book_id);
+}
+
 // Асинхронная функция загрузки книг
 async function fetchBooks() {
     try {
         const response = await fetch('http://localhost:3000/api/books');
         if (!response.ok) throw new Error('Ошибка при загрузке данных');
 
-        const literature = await response.json();
+        let literature = await response.json();
+        literature = sortBooks(literature);
+
         const bookList = document.querySelector('.book-list');
         bookList.innerHTML = ''; // Очистка списка перед вставкой новых данных
 
@@ -57,7 +63,7 @@ function createBookElement(book) {
             </div>
             <div class="input-group">
                 <label for="edit-year">Год издания</label>
-                <input type="text" name="year" placeholder="Введите год" value="${book.year_of_publishing}">
+                <input type="number" name="year" min="1" placeholder="Введите год" value="${book.year_of_publishing}">
             </div>
             <div class="input-group">
                 <label for="edit-udk">УДК</label>
@@ -65,7 +71,7 @@ function createBookElement(book) {
             </div>
             <div class="input-group">
                 <label for="edit-quantity">Количество:</label>
-                <input type="number" name="quantity" min="1" placeholder="Введите количество" value="${book.quantity}">
+                <input type="number" name="quantity" min="0" placeholder="Введите количество" value="${book.quantity}">
             </div>
             <div class="filter-buttons">
                 <button type="button" class="filter-button hide-button hide-edit-button">Отмена</button>
@@ -94,8 +100,10 @@ function createBookElement(book) {
 
     // Обработчик кнопки "Редактировать"
     bookItem.querySelector('.edit-button').addEventListener('click', function () {
+        const details = bookItem.querySelector(".item-details");
         bookItem.querySelector('.edit-book-form').style.display = "block";
         bookItem.querySelector('.item-cover').style.display = "none";
+        details.style.display = "none";
     });
 
     // Обработчик кнопки "Отмена" в форме редактирования
@@ -105,6 +113,7 @@ function createBookElement(book) {
         form.reset(); // Сбросить данные в полях формы
         bookItem.querySelector('.edit-book-form').style.display = "none";
         bookItem.querySelector('.item-cover').style.display = "flex";
+        bookItem.querySelector('.toggle-details').textContent = "Больше инфомрации";
     });
 
     // Обработчик формы редактирования книги
@@ -128,13 +137,28 @@ async function updateBook(bookItem) {
     const bookId = bookItem.dataset.id;
     const formData = new FormData(bookItem.querySelector('.edit-item-form form'));
 
+    const quantityInput = formData.get("quantity");
+    const quantityValue = parseInt(quantityInput, 10);
+
+    // Проверка на недопустимое значение
+    if (isNaN(quantityValue) || quantityValue <= 0) {
+        const quantityField = bookItem.querySelector('[name="quantity"]');
+        quantityField.setCustomValidity("Количество должно быть положительным числом");
+        quantityField.reportValidity();
+    } else {
+        // Если значение корректное, сбрасываем возможные ошибки
+        const quantityField = bookItem.querySelector('[name="quantity"]');
+        quantityField.setCustomValidity(""); // Сбрасываем сообщение об ошибке
+    }
+
     const updatedBook = {
         book_name: formData.get("name"),
         author_full_name: formData.get("author"),
         year_of_publishing: formData.get("year"),
         udc_id: formData.get("udk"),
-        quantity: parseInt(formData.get("quantity"), 10) || 1
+        quantity: quantityValue // Значение сохраняется, если оно валидное
     };
+
 
     console.log("Отправляемые данные:", updatedBook);
 
@@ -150,12 +174,11 @@ async function updateBook(bookItem) {
             const udcInput = bookItem.querySelector('[name="udk"]');
             udcInput.setCustomValidity("УДК не найдено");
             udcInput.reportValidity();
-
+        
             // Добавляем обработчик, чтобы ошибка сбрасывалась при изменении поля
             udcInput.addEventListener("input", function () {
                 udcInput.setCustomValidity("");
             });
-
             throw new Error('Ошибка при обновлении книги')
         };
 
@@ -311,28 +334,4 @@ function initPagination() {
     }
 
     displayItems();
-}
-
-function initAddItem() {
-    // Получаем элементы
-    const modal = document.getElementById("addItemModal");
-    const openModalButton = document.getElementById("openModalButton");
-    const closeModalButton = document.getElementById("closeModalButton");
-
-    // Открыть модальное окно
-    openModalButton.onclick = function () {
-        modal.style.display = "flex";
-    }
-
-    // Закрыть модальное окно
-    closeModalButton.onclick = function () {
-        modal.style.display = "none";
-    }
-
-    // Закрыть модальное окно, если пользователь кликнул вне окна
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
 }

@@ -46,51 +46,38 @@ app.get('/api/test-db', async (req, res) => {
 
 
 // Получение списка книг
-app.get('/api/books', async (req, res) => { 
-  try {
-    const result = await pool.query(`
-      SELECT
-          l.book_id,
-          l.udc_id, 
-          w.author_id,
-          l.book_name,
-          l.year_of_publishing,
-          u.udc_name, 
-          l.quantity,
-          a.author_full_name
-      FROM 
-          literature l
-      JOIN 
-          write w ON l.book_id = w.book_id
-      JOIN 
-          authors a ON w.author_id = a.author_id
-      JOIN 
-          udc u ON l.udc_id = u.udc_id
-  `);
+app.get('/api/books', async (req, res) => {
+    try {
+      const result = await pool.query(`
+        SELECT
+            l.book_id,
+            l.udc_id, 
+            w.author_id,
+            l.book_name,
+            l.year_of_publishing,
+            u.udc_name, 
+            l.quantity,
+            a.author_full_name
+        FROM 
+            literature l
+        JOIN 
+            write w ON l.book_id = w.book_id
+        JOIN 
+            authors a ON w.author_id = a.author_id
+        JOIN 
+            udc u ON l.udc_id = u.udc_id
+        ORDER BY l.book_id DESC;
+      `);
       res.json(result.rows);
-  } catch (error) {
+    } catch (error) {
       console.error('Ошибка при получении книг:', error);
-      res.status(500).json({ message: 'Ошибка сервера' });
-  }
-});
-
-// Проверка существования УДК по ID
-// app.get('/api/udc/:id', async (req, res) => {
-//     const { id } = req.params; // Получаем id из параметров URL
-//     try {
-//         const result = await pool.query('SELECT 1 FROM udc WHERE udc_id = $1', [id]);
-        
-//         if (result.rows.length === 0) {
-//             return res.status(404).json({ message: 'УДК не найдено в базе данных' });
-//         }
-
-//         res.json({ message: 'УДК существует' }); // Возвращаем подтверждение, что УДК найдено
-//     } catch (error) {
-//         console.error('Ошибка при проверке УДК:', error);
-//         res.status(500).json({ message: 'Ошибка сервера при проверке УДК' });
-//     }
-// });
-
+      res.status(500).json({
+        message: 'Ошибка сервера',
+        error: error.message,
+        stack: error.stack
+      });
+    }
+  });  
 
 app.put('/api/books/:id', async (req, res) => {
     const bookId = req.params.id;
@@ -118,6 +105,18 @@ app.put('/api/books/:id', async (req, res) => {
         console.error('Ошибка при обновлении книги:', error);
         res.status(500).json({ message: 'Ошибка при обновлении книги' });
     }
+});
+;
+
+
+app.post("/addBook", (req, res) => {
+    const { title, author, year } = req.body;
+    
+    // Здесь должна быть логика добавления книги в базу данных
+    const newBook = { title, author, year, id: Date.now() }; // Временный ID
+
+    // Ответ сервера
+    res.json({ success: true, book: newBook });
 });
 
 
