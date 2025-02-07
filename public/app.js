@@ -55,23 +55,23 @@ function createBookElement(book) {
         <form class="filter-form">
             <div class="input-group">
                 <label for="edit-name">Название</label>
-                <input type="text" name="name" placeholder="Введите название книги" value="${book.book_name}">
+                <input type="text" name="name" placeholder="Введите название книги" value="${book.book_name}" required>
             </div>
             <div class="input-group">
                 <label for="edit-author">Автор</label>
-                <input type="text" name="author" placeholder="Введите имя автора" value="${book.author_full_name}">
+                <input type="text" name="author" placeholder="Введите имя автора" value="${book.author_full_name}" required>
             </div>
             <div class="input-group">
                 <label for="edit-year">Год издания</label>
-                <input type="number" name="year" min="1" placeholder="Введите год" value="${book.year_of_publishing}">
+                <input type="number" name="year" min="1" placeholder="Введите год" value="${book.year_of_publishing}" required>
             </div>
             <div class="input-group">
                 <label for="edit-udk">УДК</label>
-                <input type="text" name="udk" placeholder="Введите УДК" value="${book.udc_id}">
+                <input type="text" name="udk" placeholder="Введите УДК" value="${book.udc_id}" required>
             </div>
             <div class="input-group">
                 <label for="edit-quantity">Количество:</label>
-                <input type="number" name="quantity" min="0" placeholder="Введите количество" value="${book.quantity}">
+                <input type="number" name="quantity" min="0" placeholder="Введите количество" value="${book.quantity}" required>
             </div>
             <div class="filter-buttons">
                 <button type="button" class="filter-button hide-button hide-edit-button">Отмена</button>
@@ -119,14 +119,35 @@ function createBookElement(book) {
     // Обработчик формы редактирования книги
     bookItem.querySelector('.edit-item-form form').addEventListener('submit', async function (event) {
         event.preventDefault();
+
+        // Проверка на пустые строки
+        const inputs = bookItem.querySelectorAll('.edit-item-form input[type="text"], .edit-item-form input[type="number"]');
+        let isFormValid = true;
+
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                input.setCustomValidity("Это поле не может быть пустым.");
+                input.reportValidity();
+                isFormValid = false;
+            } else {
+                input.setCustomValidity("");
+            }
+        });
+
+        if (!isFormValid) {
+            return; // Останавливаем отправку формы, если есть пустые поля
+        }
+
         await updateBook(bookItem);
     });
 
     // Обработчик кнопки "Сбросить" в форме редактирования
     bookItem.querySelector('.edit-item-form form').addEventListener('reset', function () {
-        const udcInput = bookItem.querySelector('[name="udk"]');
-        udcInput.setCustomValidity(""); // Сбрасываем кастомное сообщение об ошибке
-        udcInput.reportValidity(); // Обновляем состояние валидации
+        const inputs = bookItem.querySelectorAll('.edit-item-form input[type="text"], .edit-item-form input[type="number"]');
+        inputs.forEach(input => {
+            input.setCustomValidity(""); // Сбрасываем кастомное сообщение об ошибке
+            input.reportValidity(); // Обновляем состояние валидации
+        });
     });
 
     return bookItem;
@@ -137,26 +158,12 @@ async function updateBook(bookItem) {
     const bookId = bookItem.dataset.id;
     const formData = new FormData(bookItem.querySelector('.edit-item-form form'));
 
-    const quantityInput = formData.get("quantity");
-    const quantityValue = parseInt(quantityInput, 10);
-
-    // Проверка на недопустимое значение
-    if (isNaN(quantityValue) || quantityValue <= 0) {
-        const quantityField = bookItem.querySelector('[name="quantity"]');
-        quantityField.setCustomValidity("Количество должно быть положительным числом");
-        quantityField.reportValidity();
-    } else {
-        // Если значение корректное, сбрасываем возможные ошибки
-        const quantityField = bookItem.querySelector('[name="quantity"]');
-        quantityField.setCustomValidity(""); // Сбрасываем сообщение об ошибке
-    }
-
     const updatedBook = {
         book_name: formData.get("name"),
         author_full_name: formData.get("author"),
         year_of_publishing: formData.get("year"),
         udc_id: formData.get("udk"),
-        quantity: quantityValue // Значение сохраняется, если оно валидное
+        quantity: formData.get("quantity")
     };
 
 
