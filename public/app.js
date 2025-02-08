@@ -6,10 +6,12 @@ document.addEventListener("DOMContentLoaded", function () {
     initDropdown();
     initFilterToggle();
     initAddItem();
+    initAddBookButton();
+    initCloseAddBookModal();
 });
 
 function sortBooks(literature) {
-    return literature.sort((a, b) => a.book_id - b.book_id);
+    return literature.sort((a, b) => b.book_id - a.book_id);
 }
 
 // Асинхронная функция загрузки книг
@@ -19,6 +21,7 @@ async function fetchBooks() {
         if (!response.ok) throw new Error('Ошибка при загрузке данных');
 
         let literature = await response.json();
+        console.log("Данные с сервера:", literature);
         literature = sortBooks(literature);
 
         const bookList = document.querySelector('.book-list');
@@ -107,7 +110,6 @@ function createBookElement(book) {
     });
 
     // Обработчик кнопки "Отмена" в форме редактирования
-    // Обработчик кнопки "Отмена" в форме редактирования
     bookItem.querySelector('.hide-edit-button').addEventListener('click', function () {
         const form = bookItem.querySelector('.edit-item-form form');
         form.reset(); // Сбросить данные в полях формы
@@ -150,6 +152,11 @@ function createBookElement(book) {
         });
     });
 
+    // Обработчик кнопки "Удалить"
+    bookItem.querySelector('.delete-button').addEventListener('click', async function () {
+        await initDeleteItem(bookItem);
+    });
+
     return bookItem;
 }
 
@@ -181,7 +188,7 @@ async function updateBook(bookItem) {
             const udcInput = bookItem.querySelector('[name="udk"]');
             udcInput.setCustomValidity("УДК не найдено");
             udcInput.reportValidity();
-        
+
             // Добавляем обработчик, чтобы ошибка сбрасывалась при изменении поля
             udcInput.addEventListener("input", function () {
                 udcInput.setCustomValidity("");
@@ -197,43 +204,133 @@ async function updateBook(bookItem) {
     }
 }
 
-//Удалить
-const deleteButtons = document.querySelectorAll('.delete-button');
-const modal = document.getElementById('deleteModal');
-const cancelDeleteButton = document.getElementById('cancelDelete');
-const confirmDeleteButton = document.getElementById('confirmDelete');
-let itemToDelete = null; // Переменная для хранения книги, которую нужно удалить
+function initAddBookButton() {
+    const addBookButton = document.getElementById('openModalButton'); // Кнопка "Добавить книгу"
+    if (addBookButton) {
+        addBookButton.addEventListener('click', function () {
+            const addModal = document.querySelector('.modal'); // Модальное окно добавления книги
+            addModal.style.display = 'flex'; // Открытие модального окна
+        });
+    }
+}
 
-// Открытие модального окна при нажатии на кнопку "Удалить"
-deleteButtons.forEach(button => {
-    button.addEventListener('click', function () {
-        itemToDelete = this.closest('.item'); // Находим ближайший элемент книги
-        modal.style.display = 'flex'; // Показываем модальное окно
+function initCloseAddBookModal() {
+    const closeModalButton = document.getElementById('closeModalButton');
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', function () {
+            const addModal = document.querySelector('.modal'); // Модальное окно добавления книги
+            const addBookForm = document.querySelector('.add-modal-content form'); // Форма добавления книги
+
+            addBookForm.reset(); // Сбросить данные в полях формы
+            addModal.style.display = 'none'; // Закрытие модального окна
+        });
+    }
+}
+
+
+async function initAddItem() {
+    const addBookForm = document.querySelector('.add-book-form');
+    const udcInput = addBookForm.querySelector('[name="udk"]'); // поле ввода УДК
+
+    // Сбрасываем ошибку при изменении значения в поле УДК
+    udcInput.addEventListener('input', async function () {
+        udcInput.setCustomValidity(''); // Сбрасываем ошибку
+        udcInput.reportValidity(); // Обновляем статус ошибки
     });
-});
 
-// Закрытие модального окна при нажатии на кнопку "Отмена"
-cancelDeleteButton.addEventListener('click', function () {
-    modal.style.display = 'none'; // Закрываем модальное окно
-    itemToDelete = null; // Сбрасываем переменную
-});
+    addBookForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
 
-// Удаление книги при подтверждении
-confirmDeleteButton.addEventListener('click', function () {
-    if (itemToDelete) {
-        itemToDelete.remove(); // Удаляем элемент книги
-        modal.style.display = 'none'; // Закрываем модальное окно
-        itemToDelete = null; // Сбрасываем переменную
-    }
-});
+        const formData = new FormData(addBookForm);
+        const bookData = {
+            book_name: formData.get('name'),
+            author_full_name: formData.get('author'),
+            year_of_publishing: formData.get('year'),
+            udc_id: formData.get('udk'),
+            quantity: formData.get('quantity')
+        };
 
-// Закрытие модального окна, если кликнули вне его
-window.addEventListener('click', function (event) {
-    if (event.target === modal) {
-        modal.style.display = 'none'; // Закрываем модальное окно, если кликнули вне
-        itemToDelete = null; // Сбрасываем переменную
-    }
-});
+        console.log("Отправляемые данные на сервер:", bookData);
+
+        // Проверка на существование УДК
+        try {
+            const checkUdcResponse = await fetch(`http://localhost:3000/api/validate-udc/${bookData.udc_id}`);
+            const checkUdcData = await checkUdcResponse.json();
+
+            if (checkUdcResponse.ok) {
+                // Если УДК существует, отправляем данные
+                const response = await fetch('http://localhost:3000/api/books', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bookData)
+                });
+
+                if (response.ok) {
+                    const newBook = await response.json();
+                    const bookList = document.querySelector('.book-list');
+                    const bookItem = createBookElement(newBook);
+                    bookList.prepend(bookItem); // Добавляем в начало списка
+
+                    addBookForm.reset();
+                    await fetchBooks();
+                } else {
+                    alert('Ошибка при добавлении книги');
+                }
+            } else {
+                // Если УДК не найдено, показываем ошибку на форме
+                udcInput.setCustomValidity('УДК не найдено');
+                udcInput.reportValidity();
+            }
+        } catch (error) {
+            console.error('Ошибка при проверке УДК:', error);
+        }
+    });
+}
+
+
+// Функция удаления книги
+async function initDeleteItem(bookItem) {
+    const bookId = bookItem.dataset.id;
+    const deleteModal = document.getElementById("deleteModal");
+    const cancelDeleteButton = document.getElementById("cancelDelete");
+    const confirmDeleteButton = document.getElementById("confirmDelete");
+
+    // Показать модальное окно
+    deleteModal.style.display = "flex";
+
+    // Обработчик на кнопку "Отмена"
+    cancelDeleteButton.addEventListener("click", function () {
+        deleteModal.style.display = "none"; // Закрываем модальное окно
+    });
+
+    // Обработчик на кнопку "Удалить"
+    confirmDeleteButton.addEventListener("click", async function () {
+        try {
+            const response = await fetch(`http://localhost:3000/api/books/${bookId}`, {
+                method: 'DELETE'
+            });
+            const text = await response.text();
+            console.log("Ответ сервера:", response.status, text);
+
+            if (!response.ok) {
+                throw new Error("Ошибка при удалении книги");
+            }
+
+            console.log(`Книга с ID ${bookId} удалена`);
+            bookItem.remove(); // Удаление элемента из списка
+
+            // Закрыть модальное окно после успешного удаления
+            deleteModal.style.display = "none";
+        } catch (error) {
+            console.error("Ошибка при удалении книги:", error);
+            alert("Не удалось удалить книгу. Проверьте консоль для подробностей.");
+            deleteModal.style.display = "none"; // Закрыть окно в случае ошибки
+        }
+    });
+}
+
 
 function initDropdown() {
     const dropdownToggle = document.querySelector('.dropdown-toggle');

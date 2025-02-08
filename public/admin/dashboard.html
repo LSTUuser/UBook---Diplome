@@ -90,29 +90,29 @@
     <div id="addItemModal" class="modal">
         <div class="add-modal-content">
             <h3 class="filter-title">Добавление книги</h3>
-            <form class="filter-form">
+            <form class="add-book-form">
                 <div class="input-group">
                     <label for="name">Название</label>
-                    <input type="text" id="name" name="name" placeholder="Введите название книги">
+                    <input type="text" id="name" name="name" placeholder="Введите название книги" required>
                 </div>
                 <div class="input-group">
                     <label for="author">Автор</label>
-                    <input type="text" id="author" name="author" placeholder="Введите имя автора">
+                    <input type="text" id="author" name="author" placeholder="Введите имя автора" required>
                 </div>
                 <div class="input-group">
                     <label for="year">Год издания</label>
-                    <input type="text" id="year" name="year" placeholder="Введите год">
+                    <input type="number" id="year" name="year" min="1" placeholder="Введите год" required>
                 </div>
                 <div class="input-group">
                     <label for="udk">УДК</label>
-                    <input type="text" id="udk" name="udk" placeholder="Введите УДК">
+                    <input type="text" id="udk" name="udk" placeholder="Введите УДК" required>
                 </div>
                 <div class="input-group">
                     <label for="quantity">Количество:</label>
-                    <input type="number" id="quantity" name="quantity" min="1" placeholder="Введите количество">
+                    <input type="number" id="quantity" name="quantity" min="1" placeholder="Введите количество" required>
                 </div>
                 <div class="filter-buttons">
-                    <button id="closeModalButton" class="filter-button hide-button hide-add-book-button hide-add-item-button">Отмена</button>
+                    <button type="button" class="filter-button hide-button" id="closeModalButton">Отмена</button>
                     <button type="submit" class="filter-button apply-button">Добавить</button>
                     <button type="reset" class="filter-button reset-button">Сбросить</button>
                 </div>
