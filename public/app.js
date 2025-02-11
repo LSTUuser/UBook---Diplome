@@ -275,6 +275,7 @@ async function initAddItem() {
 
                     addBookForm.reset();
                     await fetchBooks();
+                    initPagination();
                 } else {
                     alert('Ошибка при добавлении книги');
                 }
@@ -319,6 +320,7 @@ async function initDeleteItem(bookItem) {
 
             console.log(`Книга с ID ${bookId} удалена`);
             bookItem.remove(); // Удаление элемента из списка
+            initPagination();
             closeModal();
         } catch (error) {
             console.error("Ошибка при удалении книги:", error);
