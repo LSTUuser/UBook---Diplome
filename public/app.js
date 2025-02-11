@@ -339,8 +339,6 @@ async function initDeleteItem(bookItem) {
     deleteModal.style.display = "flex";
 }
 
-
-
 function initDropdown() {
     const dropdownToggle = document.querySelector('.dropdown-toggle');
     const dropdownMenu = document.querySelector('.dropdown-menu');
