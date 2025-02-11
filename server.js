@@ -213,32 +213,80 @@ app.post('/api/books', async (req, res) => {
 // Обработчик для удаления книги
 app.delete('/api/books/:id', async (req, res) => {
     const bookId = req.params.id;
-
+    console.log("ID книги для удаления:", bookId);
     try {
-        // Удаляем книгу из базы данных
+        await pool.query('BEGIN');
+        // Получаем всех авторов, связанных с удаляемой книгой
+        const authorsResult = await pool.query('SELECT author_id FROM write WHERE book_id = $1', [bookId]);
+        const authorIds = authorsResult.rows.map(row => row.author_id);
+        console.log("Авторы для удаления:", authorIds);
+        // Удаляем книгу из таблицы literature
         await pool.query('DELETE FROM literature WHERE book_id = $1', [bookId]);
-         // Перенумерация оставшихся книг
-         await pool.query(`
-            WITH reordered_books AS (
-                SELECT book_id
-                FROM literature
-                ORDER BY book_id
-            )
-            UPDATE literature
-            SET book_id = reordered_books.row_number
-            FROM (
-                SELECT book_id, ROW_NUMBER() OVER (ORDER BY book_id) AS row_number
-                FROM literature
-            ) AS reordered_books
-            WHERE literature.book_id = reordered_books.book_id;
-        `);
-        await resetLiteratureSequence();
+
+        // Удаляем связи книги с авторами из таблицы writes
+        await pool.query('DELETE FROM write WHERE book_id = $1', [bookId]);
+
+        // Проверяем каждого автора, связанного с удаленной книгой
+        for (const authorId of authorIds) {
+            // Проверяем, есть ли у автора другие книги
+            const booksByAuthor = await pool.query('SELECT COUNT(*) FROM write WHERE author_id = $1', [authorId]);
+            const bookCount = parseInt(booksByAuthor.rows[0].count, 10);
+
+            // Если у автора больше нет книг, удаляем его из таблицы authors
+            if (bookCount === 0) {
+                await pool.query('DELETE FROM authors WHERE author_id = $1', [authorId]);
+            }
+        }
+
+        // Перенумерация оставшихся авторов
+        await reorderBooks();
+        await reorderAuthors();
+        await pool.query('COMMIT');
+
         res.json({ message: 'Книга успешно удалена' });
     } catch (error) {
+        await pool.query('ROLLBACK');
         console.error('Ошибка при удалении книги:', error);
         res.status(500).json({ message: 'Ошибка при удалении книги' });
     }
 });
+
+// Функция для перенумерации авторов
+async function reorderAuthors() {
+    await pool.query(`
+        WITH reordered_authors AS (
+            SELECT author_id, ROW_NUMBER() OVER (ORDER BY author_id) AS new_author_id
+            FROM authors
+        )
+        UPDATE authors
+        SET author_id = reordered_authors.new_author_id
+        FROM reordered_authors
+        WHERE authors.author_id = reordered_authors.author_id;
+    `);
+
+    // Сбрасываем последовательность для author_id
+    await resetAuthorsSequence();
+}
+
+async function reorderBooks() {
+    await pool.query(`
+        WITH reordered_books AS (
+            SELECT book_id
+            FROM literature
+            ORDER BY book_id
+        )
+        UPDATE literature
+        SET book_id = reordered_books.row_number
+        FROM (
+            SELECT book_id, ROW_NUMBER() OVER (ORDER BY book_id) AS row_number
+            FROM literature
+        ) AS reordered_books
+        WHERE literature.book_id = reordered_books.book_id;
+    `);
+
+    // Сбрасываем последовательность для book_id
+    await resetLiteratureSequence();
+}
 
 // Запуск сервера
 app.listen(PORT, () => {

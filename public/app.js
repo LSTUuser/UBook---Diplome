@@ -290,23 +290,22 @@ async function initAddItem() {
 }
 
 
-// Функция удаления книги
+// Функция удаления книги 
 async function initDeleteItem(bookItem) {
     const bookId = bookItem.dataset.id;
     const deleteModal = document.getElementById("deleteModal");
     const cancelDeleteButton = document.getElementById("cancelDelete");
     const confirmDeleteButton = document.getElementById("confirmDelete");
 
-    // Показать модальное окно
-    deleteModal.style.display = "flex";
+    // Функция для закрытия модального окна
+    function closeModal() {
+        deleteModal.style.display = "none";
+        cancelDeleteButton.removeEventListener("click", closeModal);
+        confirmDeleteButton.removeEventListener("click", confirmDelete);
+    }
 
-    // Обработчик на кнопку "Отмена"
-    cancelDeleteButton.addEventListener("click", function () {
-        deleteModal.style.display = "none"; // Закрываем модальное окно
-    });
-
-    // Обработчик на кнопку "Удалить"
-    confirmDeleteButton.addEventListener("click", async function () {
+    // Функция для подтверждения удаления
+    async function confirmDelete() {
         try {
             const response = await fetch(`http://localhost:3000/api/books/${bookId}`, {
                 method: 'DELETE'
@@ -320,16 +319,26 @@ async function initDeleteItem(bookItem) {
 
             console.log(`Книга с ID ${bookId} удалена`);
             bookItem.remove(); // Удаление элемента из списка
-
-            // Закрыть модальное окно после успешного удаления
-            deleteModal.style.display = "none";
+            closeModal();
         } catch (error) {
             console.error("Ошибка при удалении книги:", error);
             alert("Не удалось удалить книгу. Проверьте консоль для подробностей.");
-            deleteModal.style.display = "none"; // Закрыть окно в случае ошибки
+            closeModal();
         }
-    });
+    }
+
+    // Удаление старых обработчиков перед добавлением новых
+    cancelDeleteButton.removeEventListener("click", closeModal);
+    confirmDeleteButton.removeEventListener("click", confirmDelete);
+
+    // Добавляем новые обработчики
+    cancelDeleteButton.addEventListener("click", closeModal);
+    confirmDeleteButton.addEventListener("click", confirmDelete);
+
+    // Показать модальное окно
+    deleteModal.style.display = "flex";
 }
+
 
 
 function initDropdown() {
