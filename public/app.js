@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Группировка функций
     fetchBooks().then(() => {
         initPagination(); // Вызови пагинацию после загрузки книг
+        initSearch();
     });
     initDropdown();
     initFilterToggle();
@@ -15,14 +16,20 @@ function sortBooks(literature) {
 }
 
 // Асинхронная функция загрузки книг
-async function fetchBooks() {
+async function fetchBooks(query = "") {
     try {
         const response = await fetch('http://localhost:3000/api/books');
         if (!response.ok) throw new Error('Ошибка при загрузке данных');
 
         let literature = await response.json();
-        console.log("Данные с сервера:", literature);
         literature = sortBooks(literature);
+
+        // Фильтрация по названию и автору
+        if (query) {
+            literature = literature.filter(book =>
+                book.book_name.toLowerCase().includes(query)
+            );
+        }
 
         const bookList = document.querySelector('.book-list');
         bookList.innerHTML = ''; // Очистка списка перед вставкой новых данных
@@ -31,6 +38,8 @@ async function fetchBooks() {
             const bookItem = createBookElement(book);
             bookList.appendChild(bookItem);
         });
+
+        initPagination();
 
     } catch (error) {
         console.error('Ошибка загрузки книг:', error);
@@ -340,6 +349,19 @@ async function initDeleteItem(bookItem) {
     // Показать модальное окно
     deleteModal.style.display = "flex";
 }
+
+function initSearch() {
+    const searchInput = document.querySelector('.search-input');
+    const searchButton = document.querySelector('.search-button');
+
+    searchButton.addEventListener('click', function () {
+        const searchText = searchInput.value.toLowerCase().trim();
+
+        fetchBooks(searchText); // Передаем поисковый запрос в fetchBooks
+        
+    });
+}
+
 
 function initDropdown() {
     const dropdownToggle = document.querySelector('.dropdown-toggle');
