@@ -182,6 +182,7 @@ html, body {
     align-items: flex-end;
     width: 70%;
     align-items: center;
+    position: relative;
 }
 
 .search-input {
@@ -191,6 +192,21 @@ html, body {
     border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box;
+}
+
+.clear-search {
+    position: absolute;
+    right: 110px; /* Позиция крестика (учитывая ширину кнопки поиска) */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #999;
+    display: none; /* Скрываем крестик по умолчанию */
+}
+
+.clear-search:hover {
+    color: #333; /* Изменение цвета при наведении */
 }
 
 .search-button {
@@ -206,40 +222,6 @@ html, body {
 
 .search-button:hover {
     background-color: #45a049;
-}
-
-.book-filter {
-    display: none;
-    flex-direction: column;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 15px;
-    gap: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.filter-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.filter-icon {
-    width: 18px;
-    height: 18px;
-}
-
-.filter-title-main {
-    margin-left: 3px;
-    text-decoration: none;
-    color: #575858;
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.filter-title-main:hover {
-    text-decoration: underline;
 }
 
 .filter-title {

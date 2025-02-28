@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ-панель - Литература - UBook</title>
     <link rel="stylesheet" href="/styles/admin_styles/dashboard_style.css">
 </head>
+
 <body class="dashboard-body">
     <header class="dashboard-header">
         <div class="header-left">
@@ -28,51 +30,39 @@
 
     <div class="dashboard-content">
         <div class="sidebar">
-            <div class="filter-header">
-                <img src="/images/filter_icon.png" alt="Иконка фильтра" class="filter-icon">
-                <a href="#" class="filter-title-main form-title-main">Фильтр</a>
-            </div>
-            <div class="book-filter form-header item-filter">
-                <h3 class="filter-title form-title">Фильтр</h3>
-                <form class="filter-form">
-                    <div class="input-group">
-                        <label for="author">Автор</label>
-                        <input type="text" id="author" name="author" placeholder="Введите имя автора">
-                    </div>
-                    <div class="input-group">
-                        <label for="category">Категория</label>
-                        <input type="text" id="category" name="category" placeholder="Введите категорию">
-                    </div>
-                    <div class="input-group">
-                        <label for="year">Год издания</label>
-                        <input type="text" id="year" name="year" placeholder="Введите год">
-                    </div>
-                    <div class="input-group">
-                        <label for="udk">УДК</label>
-                        <input type="text" id="udk" name="udk" placeholder="Введите УДК">
-                    </div>
-                    <div class="filter-buttons">
-                        <button class="filter-button hide-button">Скрыть</button>
-                        <button type="submit" class="filter-button apply-button">Применить</button>
-                        <button type="reset" class="filter-button reset-button">Сбросить</button>
-                    </div>
-                </form>
-            </div>
-            <a href="#" class="udc-name">Качество систем и программ (1)</a>
-            <a href="#" class="udc-name">Наука в целом (2)</a>
-            <a href="#" class="udc-name">Управление предприятиями. Организация производства, торговли и транспорта (3)</a>
-            <a href="#" class="udc-name">Строительство. Строительные материалы. Строительно-монтажные работы (1)</a>
-            <a href="#" class="udc-name">Инженерное дело. Техника в целом (3)</a>
-            <a href="#" class="udc-name">Экономика. Народное хозяйство. Экономические науки (1)</a>
+            <h3 class="filter-title form-title">Фильтр</h3>
+            <form class="filter-form">
+                <div class="input-group">
+                    <label for="author">Автор</label>
+                    <input type="text" id="author" name="author" placeholder="Введите имя автора">
+                </div>
+                <div class="input-group">
+                    <label for="category">Категория</label>
+                    <input type="text" id="category" name="category" placeholder="Введите категорию">
+                </div>
+                <div class="input-group">
+                    <label for="year">Год издания</label>
+                    <input type="text" id="year" name="year" placeholder="Введите год">
+                </div>
+                <div class="input-group">
+                    <label for="udk">УДК</label>
+                    <input type="text" id="udk" name="udk" placeholder="Введите УДК">
+                </div>
+                <div class="filter-buttons">
+                    <button type="submit" class="filter-button apply-button">Применить</button>
+                    <button type="reset" class="filter-button reset-button">Сбросить</button>
+                </div>
+            </form>
         </div>
         <div class="content">
             <div class="body-top">
                 <div class="user-info">
-                    <h1 class="body-title">Каталог книг</h1>
+                    <h1 class="body-title">Каталог литературы</h1>
                 </div>
                 <div class="search-bar">
                     <input type="text" id="search-input" class="search-input" placeholder="Поиск книги...">
                     <button class="search-button">Поиск</button>
+                    <span class="clear-search" id="clear-search">×</span>
                 </div>
             </div>
             <div class="pagination">
@@ -82,7 +72,7 @@
                 <select class="page-select"></select>
                 <button id="openModalButton" class="open-modal-button">Добавить книгу</button>
             </div>
-            <div class="book-list">   
+            <div class="book-list">
             </div>
         </div>
     </div>
@@ -109,7 +99,8 @@
                 </div>
                 <div class="input-group">
                     <label for="quantity">Количество:</label>
-                    <input type="number" id="quantity" name="quantity" min="1" placeholder="Введите количество" required>
+                    <input type="number" id="quantity" name="quantity" min="1" placeholder="Введите количество"
+                        required>
                 </div>
                 <div class="filter-buttons">
                     <button type="button" class="filter-button hide-button" id="closeModalButton">Отмена</button>
@@ -135,4 +126,5 @@
     </footer>
     <script src="/app.js"></script>
 </body>
+
 </html>
