@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ const pool = new Pool({
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 
 // Маршруты для пользовательского интерфейса
 app.use('/user', express.static(path.join(__dirname, 'public', 'user')));
@@ -27,9 +29,94 @@ app.use('/user', express.static(path.join(__dirname, 'public', 'user')));
 // Маршруты для административного интерфейса
 app.use('/admin', express.static(path.join(__dirname, 'public', 'admin')));
 
-// Обработчик логина (пока заглушка)
-app.post('/login', (req, res) => {
-    res.send('Обработка логина');
+// Обработчик логина
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    // Проверка наличия email и пароля
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email и пароль обязательны' });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Некорректный формат email' });
+    }
+
+    try {
+        // Поиск пользователя в базе данных по email
+        const userResult = await pool.query('SELECT * FROM "user" WHERE email = $1', [email]);
+
+        // Если пользователь не найден
+        if (userResult.rows.length === 0) {
+            return res.status(401).json({ message: 'Пользователь с таким email не найден' });
+        }
+
+        const user = userResult.rows[0];
+
+        // Сравнение хэшированного пароля
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        // Если пароль неверный
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: 'Неверный пароль' });
+        }
+
+        // Если всё успешно, возвращаем данные пользователя (без пароля)
+        res.status(200).json({
+            message: 'Авторизация успешна',
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email
+            }
+        });
+    } catch (error) {
+        console.error('Ошибка при авторизации:', error);
+        res.status(500).json({ message: 'Ошибка сервера при авторизации' });
+    }
+});
+
+app.post('/register', async (req, res) => {
+    const { email, password, fullname, idCard, group } = req.body;
+
+    // Проверка наличия всех обязательных полей
+    if (!email || !password || !fullname || !idCard || !group) {
+        return res.status(400).json({ message: 'Все поля обязательны' });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Некорректный формат email' });
+    }
+
+    try {
+        // Хэширование пароля
+        const saltRounds = 10;
+        const passwordHash = await bcrypt.hash(password, saltRounds);
+
+        // Вставка данных в таблицу user
+        const query = `
+            INSERT INTO "user" (user_full_name, email, password, student_id_number, group_name)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING user_full_name, email, student_id_number, group_name
+        `;
+        const values = [fullname, email, passwordHash, idCard, group];
+
+        const result = await pool.query(query, values);
+
+        // Успешный ответ
+        res.redirect('reg_success.html');
+    } catch (error) {
+        console.error('Ошибка при регистрации:', error);
+
+        // Обработка ошибок
+        if (error.code === '23505') { // Ошибка уникальности (например, повторяющийся email)
+            return res.status(400).json({ message: 'Пользователь с таким email уже существует' });
+        }
+
+        res.status(500).json({ message: 'Ошибка сервера при регистрации' });
+    }
 });
 
 // Проверка подключения к базе данных
@@ -205,7 +292,7 @@ app.post('/api/books', async (req, res) => {
 
     try {
         console.log("Данные для добавления книги:", req.body);
-        
+
         // Проверка на наличие UDC
         const udcResult = await pool.query('SELECT 1 FROM udc WHERE udc_id = $1', [udc_id]);
         if (udcResult.rowCount === 0) {
