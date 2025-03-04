@@ -80,16 +80,6 @@ app.post('/login', async (req, res) => {
 app.post('/register', async (req, res) => {
     const { email, password, fullname, idCard, group } = req.body;
 
-    // Проверка наличия всех обязательных полей
-    if (!email || !password || !fullname || !idCard || !group) {
-        return res.status(400).json({ message: 'Все поля обязательны' });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        return res.status(400).json({ message: 'Некорректный формат email' });
-    }
-
     try {
         // Хэширование пароля
         const saltRounds = 10;
@@ -106,16 +96,16 @@ app.post('/register', async (req, res) => {
         const result = await pool.query(query, values);
 
         // Успешный ответ
-        res.redirect('reg_success.html');
+        res.status(200).json({ success: true, message: 'Регистрация успешна' });
     } catch (error) {
         console.error('Ошибка при регистрации:', error);
 
         // Обработка ошибок
         if (error.code === '23505') { // Ошибка уникальности (например, повторяющийся email)
-            return res.status(400).json({ message: 'Пользователь с таким email уже существует' });
+            return res.status(400).json({ success: false, message: 'Пользователь с таким email уже существует' });
         }
 
-        res.status(500).json({ message: 'Ошибка сервера при регистрации' });
+        res.status(500).json({ success: false, message: 'Ошибка сервера при регистрации' });
     }
 });
 
@@ -131,6 +121,31 @@ app.get('/api/test-db', async (req, res) => {
     }
 });
 
+
+// Endpoint для получения списка групп
+app.get('/api/groups', async (req, res) => {
+    try {
+        // Запрос к базе данных для получения списка групп
+        const result = await pool.query('SELECT group_name FROM "group"');
+        const groups = result.rows.map(row => row.group_name.trim()); // Извлекаем названия групп
+        res.status(200).json({ success: true, groups });
+    } catch (error) {
+        console.error('Ошибка при получении списка групп:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера при получении списка групп' });
+    }
+});
+
+app.get('/api/id_number', async (req, res) => {
+    try {
+        // Запрос к базе данных для получения списка номеров студ билетов
+        const result = await pool.query('SELECT student_id_number FROM "user"');
+        const id_numbers = result.rows.map(row => row.student_id_number.trim()); // Извлекаем номера студ билетов
+        res.status(200).json({ success: true, id_numbers });
+    } catch (error) {
+        console.error('Ошибка при получении списка номеров студ билетов:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера при получении списка номеров студ билетов' });
+    }
+});
 
 // Получение списка книг
 app.get('/api/books', async (req, res) => {
