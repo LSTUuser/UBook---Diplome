@@ -18,7 +18,7 @@ function sortBooks(literature) {
 // Асинхронная функция загрузки книг
 async function fetchBooks(query = "", filters = {}) {
     try {
-        const response = await fetch('http://localhost:3000/api/books');
+        const response = await fetch('http://localhost:3000/api/book/books');
         if (!response.ok) throw new Error('Ошибка при загрузке данных');
 
         let literature = await response.json();
@@ -209,7 +209,7 @@ async function updateBook(bookItem) {
 
 
     try {
-        const response = await fetch(`http://localhost:3000/api/books/${bookId}`, {
+        const response = await fetch(`http://localhost:3000/api/book/books/${bookId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedBook)
@@ -285,12 +285,12 @@ async function initAddItem() {
 
         // Проверка на существование УДК
         try {
-            const checkUdcResponse = await fetch(`http://localhost:3000/api/validate-udc/${bookData.udc_id}`);
+            const checkUdcResponse = await fetch(`http://localhost:3000/api/book/udc_id/${bookData.udc_id}`);
             const checkUdcData = await checkUdcResponse.json();
 
             if (checkUdcResponse.ok) {
                 // Если УДК существует, отправляем данные
-                const response = await fetch('http://localhost:3000/api/books', {
+                const response = await fetch('http://localhost:3000/api/book/books', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -339,7 +339,7 @@ async function initDeleteItem(bookItem) {
     // Функция для подтверждения удаления
     async function confirmDelete() {
         try {
-            const response = await fetch(`http://localhost:3000/api/books/${bookId}`, {
+            const response = await fetch(`http://localhost:3000/api/book/books/${bookId}`, {
                 method: 'DELETE'
             });
             const text = await response.text();

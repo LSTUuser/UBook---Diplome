@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (registerForm) {
         let validGroups = []; // Список допустимых групп
         let validIdNums = [];
+        let validEmails = [];
         // Загружаем список групп с сервера
         try {
             const response = await fetch('/api/groups');
@@ -31,6 +32,19 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.error('Ошибка при загрузке списка номеров студ билетов:', error);
         }
 
+        try {
+            const response = await fetch('/api/email');
+            const result = await response.json();
+
+            if (result.success) {
+                validEmails = result.emails; // Сохраняем список групп
+            } else {
+                console.error('Ошибка при загрузке списка групп:', result.message);
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке списка групп:', error);
+        }
+
         // Обработчик для поля "ФИО"
         const fullnameInput = document.getElementById('fullname');
         if (fullnameInput) {
@@ -56,12 +70,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             let hasErrors = false; // Флаг для отслеживания ошибок
 
-            // Проверка наличия всех полей
-            if (!email || !password || !fullname || !idCard || !group) {
-                alert('Все поля обязательны');
-                hasErrors = true;
-            }
-
             // Проверка формата email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
@@ -72,13 +80,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             // Проверка длины номера студенческого билета
             if (idCard.length !== 10) {
                 document.getElementById('idCard').setCustomValidity('Номер студенческого билета должен содержать 10 символов');
-                hasErrors = true;
-            }
-
-            // Проверка на наличие цифр в ФИО
-            const fullnameRegex = /^[а-яА-ЯёЁa-zA-Z\s\-]+$/; // Разрешены только буквы, пробелы и дефисы
-            if (!fullnameRegex.test(fullname)) {
-                document.getElementById('fullname').setCustomValidity('ФИО не должно содержать цифр или специальных символов');
                 hasErrors = true;
             }
 
@@ -94,6 +95,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                 hasErrors = true;
             }
 
+            if (validEmails.includes(email)) {
+                document.getElementById('email').setCustomValidity('Пользователь с данным email уже зарегестрирован');
+                hasErrors = true;
+            }
+
             // Если есть ошибки, останавливаем выполнение
             if (hasErrors) {
                 registerForm.reportValidity(); // Показываем ошибки
@@ -102,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             // Если все проверки пройдены, отправляем данные на сервер
             const formData = new FormData(this);
-            const response = await fetch('/register', {
+            const response = await fetch('api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -184,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             // Отправка данных на сервер
             try {
-                const response = await fetch('/login', {
+                const response = await fetch('api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
