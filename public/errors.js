@@ -135,3 +135,85 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const loginForm = document.getElementById('loginForm');
+
+    if (loginForm) {
+
+        let validEmails = [];
+
+        try {
+            const response = await fetch('/api/email');
+            const result = await response.json();
+
+            if (result.success) {
+                validEmails = result.emails; // Сохраняем список групп
+            } else {
+                console.error('Ошибка при загрузке списка групп:', result.message);
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке списка групп:', error);
+        }
+
+
+        loginForm.addEventListener('submit', async function (event) {
+            event.preventDefault(); // Предотвращаем стандартную отправку формы
+
+            // Очищаем предыдущие ошибки
+            const inputs = this.querySelectorAll('input');
+            inputs.forEach(input => input.setCustomValidity(''));
+
+            // Получаем данные из формы
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            let hasErrors = false;
+            
+            if (!validEmails.includes(email)) {
+                console.log(validEmails);
+                document.getElementById('email').setCustomValidity('Пользователь с данным email не существует');
+                hasErrors = true;
+            }
+
+            // Если есть ошибки, останавливаем выполнение
+            if (hasErrors) {
+                loginForm.reportValidity();
+                return;
+            }
+
+            // Отправка данных на сервер
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    window.location.href = '/user/dashboard.html'; // Перенаправление после успешного входа
+                } else {
+                    // Обработка ошибок
+                    if (response.status === 401) {
+                        document.getElementById('password').setCustomValidity('Неверный пароль');
+                    } else {
+                        alert('Ошибка сервера, попробуйте позже.');
+                    }
+                    loginForm.reportValidity();
+                }
+            } catch (error) {
+                console.error('Ошибка при входе:', error);
+                alert('Ошибка сервера, попробуйте позже.');
+            }
+        });
+
+        // Очистка ошибок при вводе
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function () {
+                this.setCustomValidity('');
+            });
+        });
+    }
+});

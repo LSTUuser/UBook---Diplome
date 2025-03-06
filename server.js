@@ -33,23 +33,13 @@ app.use('/admin', express.static(path.join(__dirname, 'public', 'admin')));
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
-    // Проверка наличия email и пароля
-    if (!email || !password) {
-        return res.status(400).json({ message: 'Email и пароль обязательны' });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        return res.status(400).json({ message: 'Некорректный формат email' });
-    }
-
     try {
         // Поиск пользователя в базе данных по email
         const userResult = await pool.query('SELECT * FROM "user" WHERE email = $1', [email]);
 
         // Если пользователь не найден
         if (userResult.rows.length === 0) {
-            return res.status(401).json({ message: 'Пользователь с таким email не найден' });
+            return res.status(401).json({ success: false }); // Возвращаем только статус
         }
 
         const user = userResult.rows[0];
@@ -59,12 +49,12 @@ app.post('/login', async (req, res) => {
 
         // Если пароль неверный
         if (!isPasswordValid) {
-            return res.status(401).json({ message: 'Неверный пароль' });
+            return res.status(401).json({ success: false }); // Возвращаем только статус
         }
 
         // Если всё успешно, возвращаем данные пользователя (без пароля)
         res.status(200).json({
-            message: 'Авторизация успешна',
+            success: true,
             user: {
                 id: user.id,
                 username: user.username,
@@ -73,7 +63,7 @@ app.post('/login', async (req, res) => {
         });
     } catch (error) {
         console.error('Ошибка при авторизации:', error);
-        res.status(500).json({ message: 'Ошибка сервера при авторизации' });
+        res.status(500).json({ success: false }); // Возвращаем только статус
     }
 });
 
@@ -100,11 +90,6 @@ app.post('/register', async (req, res) => {
     } catch (error) {
         console.error('Ошибка при регистрации:', error);
 
-        // Обработка ошибок
-        if (error.code === '23505') { // Ошибка уникальности (например, повторяющийся email)
-            return res.status(400).json({ success: false, message: 'Пользователь с таким email уже существует' });
-        }
-
         res.status(500).json({ success: false, message: 'Ошибка сервера при регистрации' });
     }
 });
@@ -121,6 +106,17 @@ app.get('/api/test-db', async (req, res) => {
     }
 });
 
+
+app.get('/api/email', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT email FROM "user"');
+        const emails = result.rows.map(row => row.email.trim());
+        res.status(200).json({ success: true, emails });
+    } catch (error) {
+        console.error('Ошибка при получении списка email:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера при получении списка email' });
+    }
+});
 
 // Endpoint для получения списка групп
 app.get('/api/groups', async (req, res) => {
