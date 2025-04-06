@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             // Отправка данных на сервер
             try {
-                const response = await fetch('api/auth/login', {
+                const response = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -199,7 +199,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                 const result = await response.json();
 
                 if (result.success) {
-                    window.location.href = '/user/dashboard.html'; // Перенаправление после успешного входа
+                    if (result.user.is_admin) {
+                        window.location.href = '/admin/dashboard.html';
+                    } else {
+                        window.location.href = '/user/dashboard.html';
+                    }
                 } else {
                     // Обработка ошибок
                     if (response.status === 401) {
@@ -221,5 +225,70 @@ document.addEventListener('DOMContentLoaded', async function () {
                 this.setCustomValidity('');
             });
         });
+    }
+});
+
+// Обработчик выхода
+document.addEventListener('DOMContentLoaded', () => {
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            console.log('Нажата кнопка выхода'); // Для отладки
+            
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include' // Важно для работы с cookies
+                });
+                
+                console.log('Ответ сервера:', response.status); // Для отладки
+                
+                if (response.ok) {
+                    window.location.href = '/login.html';
+                } else {
+                    alert('Ошибка при выходе');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Не удалось выполнить выход');
+            }
+        });
+    }
+});
+
+// Функция для проверки аутентификации
+async function checkAuth() {
+    try {
+        const response = await fetch('/api/auth/check', {
+            credentials: 'include' // Важно для отправки cookies
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Ошибка проверки аутентификации:', error);
+        return { isAuthenticated: false };
+    }
+}
+
+// Пример использования на защищенных страницах
+document.addEventListener('DOMContentLoaded', async () => {
+    const protectedPaths = ['/admin/', '/user/'];
+    const isProtected = protectedPaths.some(path => 
+        window.location.pathname.startsWith(path)
+    );
+
+    if (isProtected) {
+        const authStatus = await checkAuth();
+        
+        if (!authStatus.isAuthenticated) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        // Явная проверка is_admin для админских путей
+        if (window.location.pathname.startsWith('/admin/') && !authStatus.user?.is_admin) {
+            window.location.href = '/user/dashboard.html';
+        }
     }
 });
