@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../../database'); // Подключение к базе данных
+const pool = require('../../database');
 const { resetAuthorsSequence } = require('../../utils/reorderAuthors');
 const { resetLiteratureSequence } = require('../../utils/reorderLiterature');
 
