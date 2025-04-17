@@ -34,13 +34,13 @@ router.post('/login', async (req, res) => {
                 iat: Math.floor(Date.now() / 1000),
             }, 
             JWT_SECRET,
-            { expiresIn: '1h' } // Токен будет действителен 1 час
+            { expiresIn: '1h' }
         );
 
         console.log('Выдан токен:', {
-            token: token, // Сам токен (для разработки)
-            decoded: jwt.decode(token), // Расшифрованная payload часть
-            expires: new Date(Date.now() + 3600000) // Время истечения
+            token: token,
+            decoded: jwt.decode(token),
+            expires: new Date(Date.now() + 3600000)
           });
 
          // Устанавливаем токен в HTTP-only cookie
@@ -100,10 +100,9 @@ router.post('/logout', (req, res) => {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         path: '/',
-        domain: 'localhost' // Укажите ваш домен
+        domain: 'localhost'
     });
     
-    // Принудительный ответ с истёкшим cookie
     res.cookie('token', '', {
         expires: new Date(0),
         httpOnly: true,
@@ -113,23 +112,23 @@ router.post('/logout', (req, res) => {
         domain: 'localhost'
     });
 
-    return res.status(204).end(); // No Content
+    return res.status(204).end();
 });
 
 // Роут для регистрации
 router.post('/register', async (req, res) => {
-    const { email, password, fullname, idCard, group } = req.body;
+    const { email, password, fullname, idCard, group, year} = req.body;
 
     try {
         const saltRounds = 10;
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
         const query = `
-            INSERT INTO "user" (user_full_name, email, password, student_id_number, group_name)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING user_full_name, email, student_id_number, group_name
+            INSERT INTO "user" (user_full_name, email, password, student_id_number, group_name, year_of_studying)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING user_full_name, email, student_id_number, group_name, year_of_studying
         `;
-        const values = [fullname, email, passwordHash, idCard, group];
+        const values = [fullname, email, passwordHash, idCard, group, year];
 
         const result = await pool.query(query, values);
         res.status(200).json({ success: true, message: 'Регистрация успешна' });

@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             const fullname = document.getElementById('fullname').value;
             const idCard = document.getElementById('idCard').value;
             const group = document.getElementById('group').value;
+            const year = document.getElementById('year').value;
 
             let hasErrors = false; // Флаг для отслеживания ошибок
 

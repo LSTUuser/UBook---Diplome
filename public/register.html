@@ -11,39 +11,49 @@
         <img src="/images/logo.png" alt="Логотип UBook" class="reg-logo">
         <h1 class="reg-name">UBook</h1>
     </div>
-    <div class="reg-container">
-        <h1 class="reg-title">Регистрация</h1>
-        <form id="registerForm" action="/register" method="POST">
-            <div class="input-group">
-                <label for="email">Почта</label>
-                <input type="text" id="email" name="email" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="input-group">
-                <label for="fullname">ФИО</label>
-                <input type="text" id="fullname" name="fullname" required>
-            </div>
-            <div class="input-group">
-                <label for="idCard">Номер студенческого билета</label>
-                <input type="text" id="idCard" name="idCard" maxlength="10" minlength="10" required>
-            </div>
-            <div class="input-group">
-                <label for="group">Группа</label>
-                <input type="text" id="group" name="group" list="group-options" required>
-                <datalist id="group-options">
-                    <option value="АИ">
-                    <option value="ПИ">
-                    <option value="АС">
-                    <option value="ЭО">
-                    <option value="ЭП">
-                </datalist>
-            </div>
-            <button type="submit" class="reg-button">Зарегистрироваться</button>
-        </form>
-    </div>
+        <div class="reg-container">
+            <h1 class="reg-title">Регистрация</h1>
+            <form id="registerForm" action="/register" method="POST">
+                <div class="input-group">
+                    <label for="email">Почта</label>
+                    <input type="text" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="input-group">
+                    <label for="fullname">ФИО</label>
+                    <input type="text" id="fullname" name="fullname" required>
+                </div>
+                <div class="input-group">
+                    <label for="idCard">Номер студенческого билета</label>
+                    <input type="text" id="idCard" name="idCard" maxlength="10" minlength="10" required>
+                </div>
+                <div class="input-group">
+                    <label for="group">Группа</label>
+                    <select id="group" name="group" class="reg-select" required>
+                        <option value="" disabled selected>Выберите группу</option>
+                        <option value="АИ">АИ</option>
+                        <option value="ПИ">ПИ</option>
+                        <option value="АС">АС</option>
+                        <option value="ЭО">ЭО</option>
+                        <option value="ЭП">ЭП</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="year">Курс</label>
+                    <select id="year" name="year" class="reg-select" required>
+                        <option value="" disabled selected>Выберите курс</option>
+                        <option value="1">1 курс</option>
+                        <option value="2">2 курс</option>
+                        <option value="3">3 курс</option>
+                        <option value="4">4 курс</option>
+                    </select>
+                </div>
+                <button type="submit" class="reg-button">Зарегистрироваться</button>
+            </form>
+        </div>
     <script src="/authentication.js"></script>
 </body>
 </html>
