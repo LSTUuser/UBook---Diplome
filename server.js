@@ -17,6 +17,7 @@ app.use(cookieParser());
 const authRoutes = require('./routes/auth');
 const emailRoutes = require('./routes/email');
 const groupRoutes = require('./routes/group');
+
 const idNumberRoutes = require('./routes/book/id_number');
 const booksRoutes = require('./routes/book/books');
 const udcId = require('./routes/book/udc_id');
@@ -24,15 +25,22 @@ const updateBookRoutes = require('./routes/book/update_book');
 const addBookRoutes = require('./routes/book/add_book');
 const deleteBookRoutes = require('./routes/book/delete_book');
 
+const usersRoutes = require('./routes/user/users');
+const deleteUserRoutes = require('./routes/user/delete_user');
+
 app.use('/api/auth', authRoutes);
 app.use('/api', emailRoutes);
 app.use('/api', groupRoutes);
+
 app.use('/api', idNumberRoutes)
 app.use('/api/book', booksRoutes);
 app.use('/api/book', udcId);
 app.use('/api/book', updateBookRoutes);
 app.use('/api/book', addBookRoutes);
 app.use('/api/book', deleteBookRoutes);
+
+app.use('/api/user', usersRoutes);
+app.use('/api/user', deleteUserRoutes);
 
 // Маршруты для пользовательского интерфейса
 app.use('/user', express.static(path.join(__dirname, 'public', 'user')));

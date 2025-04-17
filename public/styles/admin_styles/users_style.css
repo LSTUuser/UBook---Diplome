@@ -285,6 +285,21 @@ html, body {
     background-color: #45a049;
 }
 
+.clear-search {
+    position: absolute;
+    transform: translateY(-50%);
+    right: 125px;
+    top: 93px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #999;
+    display: none; /* Скрываем крестик по умолчанию */
+}
+
+.clear-search:hover {
+    color: #333; /* Изменение цвета при наведении */
+}
+
 .pagination {
     display: flex;
     align-items: center;
