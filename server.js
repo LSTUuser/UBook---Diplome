@@ -28,6 +28,11 @@ const deleteBookRoutes = require('./routes/book/delete_book');
 const usersRoutes = require('./routes/user/users');
 const deleteUserRoutes = require('./routes/user/delete_user');
 
+const issuancesRoutes = require('./routes/issuance/issuances');
+const addIssuanceRoutes = require('./routes/issuance/add_issuance');
+const deleteIssuanceRoutes = require('./routes/issuance/delete_issuance');
+const closeIssuanceRoutes = require('./routes/issuance/close_issuance');
+
 app.use('/api/auth', authRoutes);
 app.use('/api', emailRoutes);
 app.use('/api', groupRoutes);
@@ -41,6 +46,11 @@ app.use('/api/book', deleteBookRoutes);
 
 app.use('/api/user', usersRoutes);
 app.use('/api/user', deleteUserRoutes);
+
+app.use('/api/issuance', issuancesRoutes);
+app.use('/api/issuance', addIssuanceRoutes);
+app.use('/api/issuance', deleteIssuanceRoutes);
+app.use('/api/issuance', closeIssuanceRoutes);
 
 // Маршруты для пользовательского интерфейса
 app.use('/user', express.static(path.join(__dirname, 'public', 'user')));

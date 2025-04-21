@@ -14,6 +14,7 @@ router.get('/books', async (req, res) => {
             l.year_of_publishing,
             u.udc_name, 
             l.quantity,
+            l.available,
             a.author_full_name
         FROM 
             literature l

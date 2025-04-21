@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="/styles/admin_styles/issuances_style.css">
     <title>Админ-панель - Выдачи - UBook</title>
 </head>
@@ -35,21 +38,20 @@
                 <h3 class="filter-title form-title">Фильтр</h3>
                 <form class="filter-form">
                     <div class="input-group">
-                        <label for="author">ФИО</label>
-                        <input type="text" id="author" name="author" placeholder="Введите ФИО пользователя">
+                        <label for="name">ФИО</label>
+                        <input type="text" id="name" name="name" placeholder="Введите ФИО пользователя">
                     </div>
                     <div class="input-group">
-                        <label for="category">Студенческий билет</label>
-                        <input type="text" id="category" name="category"
-                            placeholder="Введите номер студенческого билета">
+                        <label for="student_id_number">Студенческий билет</label>
+                        <input type="text" id="student_id_number" name="student_id_number" placeholder="Введите номер студенческого билета">
                     </div>
                     <div class="input-group">
-                        <label for="year">Группа</label>
-                        <input type="text" id="year" name="year" placeholder="Введите группу">
+                        <label for="group">Группа</label>
+                        <input type="text" id="group" name="group" placeholder="Введите группу">
                     </div>
                     <div class="input-group">
-                        <label for="udk">Курс</label>
-                        <input type="text" id="udk" name="udk" placeholder="Введите курс">
+                        <label for="year">Курс</label>
+                        <input type="text" id="year" name="year" placeholder="Введите курс">
                     </div>
                     <h3 class="filter-title date-title">Диапазон дат</h3>
                     <div class="input-group">
@@ -66,6 +68,7 @@
                     </div>
                 </form>
             </div>
+            <button class="debtors-button" id="downloadDebtorsBtn">Скачать список должников</button>
         </div>
         <div class="content">
             <div class="body-top">
@@ -76,142 +79,22 @@
                     <select class="page-select"></select>
                 </div>
                 <div class="search-bar">
-                    <input type="text" id="search-input" class="search-input" placeholder="Поиск выдач...">
+                    <div class="search-input-wrapper">
+                        <input type="text" id="search-input" class="search-input" placeholder="Поиск выдач...">
+                        <span class="clear-search" id="clear-search">×</span>
+                    </div>
                     <button class="search-button">Поиск</button>
-                </div>
+                </div>                
             </div>
             <div class="issuance-info">
-                <p class="issuance-column">Номер выдачи</p>
+                <p class="issuance-column-first">Номер выдачи</p>
                 <p class="issuance-column">ФИО получателя</p>
                 <p class="issuance-column">Дата выдачи</p>
+                <p class="issuance-column">Срок возврата</p>
                 <p class="issuance-column">Дата возврата</p>
                 <p class="issuance-column-actions">Действия</p>
             </div>
             <div class="issuance-list">
-                <div class="issuance item">
-                    <div class="issuance-cover item-cover">
-                        <p class="issuance-id">1</p>
-                        <p class="issuance-user">Гуцалов Артём Витальевич</p>
-                        <p class="issuance-dates">01-12-2024</p>
-                        <p class="issuance-dates">01-12-2024</p>
-                        <div class="issuance-buttons">
-                            <button class="edit-button">Редактировать</button>
-                            <button class="delete-button">Удалить</button>
-                            <button class="toggle-details">Больше информации</button>
-                        </div>
-                    </div>
-                    <div class="edit-issuance-form edit-item-form">
-                        <h3 class="filter-title">Редактирование выдачи</h3>
-                        <form class="filter-form">
-                            <div class="input-group">
-                                <label for="edit-book-name">Название книги</label>
-                                <input type="text" id="edit-book-name" name="book-name"
-                                    placeholder="Введите название книги">
-                            </div>
-                            <div class="input-group">
-                                <label for="edit-user-name">Имя пользователя</label>
-                                <input type="text" id="edit-user-name" name="user-name"
-                                    placeholder="Введите имя пользователя">
-                            </div>
-                            <div class="input-group">
-                                <label for="edit-issue-date">Дата выдачи</label>
-                                <input type="date" id="edit-issue-date" name="issue-date">
-                            </div>
-                            <div class="input-group">
-                                <label for="edit-return-date">Дата возврата</label>
-                                <input type="date" id="edit-return-date" name="return-date">
-                            </div>
-                            <div class="filter-buttons">
-                                <button type="button" class="filter-button hide-button hide-edit-button">Отмена</button>
-                                <button type="submit" class="filter-button apply-button">Сохранить</button>
-                                <button type="reset" class="filter-button reset-button">Сбросить</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="issuance-details item-details">
-                        <hr class="line">
-                        <div class="book-name">
-                            Книга: Совершенный код
-                        </div>
-                        <div class="issuance-description">
-                            <div class="book-author">Автор: Стив Макконелл</div>
-                            <div class="year_of_publishing">Год издания: 1993</div>
-                            <div class="udc">УДК: 004.45</div>
-                            <div class="category">Категория: Cистемное программное обеспечение</div>
-                        </div>
-                        <div class="book-name">
-                            Книга: Искусство Программирования
-                        </div>
-                        <div class="issuance-description">
-                            <div class="book-author">Автор: Дональд Эрвин</div>
-                            <div class="year_of_publishing">Год издания: 1968</div>
-                            <div class="udc">УДК: 681.142.2</div>
-                            <div class="category">Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="issuance item">
-                    <div class="issuance-cover item-cover">
-                        <p class="issuance-id">2</p>
-                        <p class="issuance-user">Морозов Александр Александрович</p>
-                        <p class="issuance-dates">12-11-2024</p>
-                        <p class="issuance-dates">-</p>
-                        <div class="issuance-buttons">
-                            <button class="edit-button">Редактировать</button>
-                            <button class="delete-button">Удалить</button>
-                            <button class="toggle-details">Больше информации</button>
-                        </div>
-                    </div>
-                    <div class="edit-issuance-form edit-item-form">
-                        <h3 class="filter-title">Редактирование выдачи</h3>
-                        <form class="filter-form">
-                            <div class="input-group">
-                                <label for="edit-book-name">Название книги</label>
-                                <input type="text" id="edit-book-name" name="book-name"
-                                    placeholder="Введите название книги">
-                            </div>
-                            <div class="input-group">
-                                <label for="edit-user-name">Имя пользователя</label>
-                                <input type="text" id="edit-user-name" name="user-name"
-                                    placeholder="Введите имя пользователя">
-                            </div>
-                            <div class="input-group">
-                                <label for="edit-issue-date">Дата выдачи</label>
-                                <input type="date" id="edit-issue-date" name="issue-date">
-                            </div>
-                            <div class="input-group">
-                                <label for="edit-return-date">Дата возврата</label>
-                                <input type="date" id="edit-return-date" name="return-date">
-                            </div>
-                            <div class="filter-buttons">
-                                <button type="button" class="filter-button hide-button hide-edit-button">Отмена</button>
-                                <button type="submit" class="filter-button apply-button">Сохранить</button>
-                                <button type="reset" class="filter-button reset-button">Сбросить</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="issuance-details item-details">
-                        <hr class="line">
-                        <div class="book-name">
-                            Книга: Совершенный код
-                        </div>
-                        <div class="issuance-description">
-                            <div class="book-author">Автор: Стив Макконелл</div>
-                            <div class="year_of_publishing">Год издания: 1993</div>
-                            <div class="udc">УДК: 004.45</div>
-                            <div class="category">Категория: Cистемное программное обеспечение</div>
-                        </div>
-                        <div class="book-name">
-                            Книга: Искусство Программирования
-                        </div>
-                        <div class="issuance-description">
-                            <div class="book-author">Автор: Дональд Эрвин</div>
-                            <div class="year_of_publishing">Год издания: 1968</div>
-                            <div class="udc">УДК: 681.142.2</div>
-                            <div class="category">Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -219,29 +102,29 @@
     <div id="addItemModal" class="modal">
         <div class="add-modal-content">
             <h3 class="filter-title">Добавление выдачи</h3>
-            <form class="filter-form">
+            <form class="add-issuance-form">
                 <div class="input-group">
-                    <label for="group">Получатель</label>
-                    <input type="text" id="group" name="group" list="group-options" required>
-                    <datalist id="group-options">
-                        <option value="Гуцалов Артём Витальевич">
-                        <option value="Морозов Александр Александрович">
-                    </datalist>
+                    <label for="userSelect">Пользователь:</label>
+                    <select name="name" id="userSelect" class="styled-input">
+                        <option value="" selected disabled>Выберите пользователя</option>
+                    </select>
                 </div>
                 <div class="input-group">
-                    <label for="start-date">Дата выдачи</label>
-                    <input type="date" id="start-date" name="start-date">
-                </div>
-                <div class="add-title">
-                    <label for="book">Книга</label>
-                    <img src="/images/add_icon.png" alt="Добавить" class="add-icon">
+                    <label for="bookSelect">Книга:</label>
+                    <select name="book" id="bookSelect" class="styled-input">
+                        <option value="" selected disabled>Выберите книгу</option>
+                    </select>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="udk" name="udk" placeholder="Введите название книги">
+                    <label for="start-date">Дата выдачи:</label>
+                    <input type="date" name="start-date" class="styled-input" required>
+                </div>
+                <div class="input-group">
+                    <label for="end-date">Срок возврата:</label>
+                    <input type="date" name="end-date" class="styled-input" required>
                 </div>
                 <div class="filter-buttons">
-                    <button id="closeModalButton"
-                        class="filter-button hide-button hide-add-book-button hide-add-item-button">Отмена</button>
+                    <button id="closeModalButton" class="filter-button hide-button">Отмена</button>
                     <button type="submit" class="filter-button apply-button">Добавить</button>
                     <button type="reset" class="filter-button reset-button">Сбросить</button>
                 </div>
@@ -259,11 +142,22 @@
         </div>
     </div>
 
+    <div id="issuanceModal" class="modal">
+        <div class="delete-modal-content">
+            <h3>Вы уверены, что хотите закрыть эту выдачу?</h3>
+            <div class="modal-buttons">
+                <button id="cancelIssuance" class="edit-button">Отмена</button>
+                <button id="confirmIssuance" class="issuance-button">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <p>&copy; 2024 UBook. Все права защищены.</p>
     </footer>
-    <script src="/app.js"></script>
+    <script type="module" src="/js/admin/issuance.js"></script>
     <script src="/authentication.js"></script>
+    <script src="/js/dropdown.js"></script>
 </body>
 
 </html>

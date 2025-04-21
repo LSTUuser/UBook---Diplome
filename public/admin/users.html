@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles/admin_styles/users_style.css">
     <title>Админ-панель - Пользователи - UBook</title>
 </head>
+
 <body class="users-body">
     <header class="users-header">
         <div class="header-left">
@@ -28,36 +30,35 @@
 
     <div class="users-content">
         <div class="sidebar">
-            <div class="user-filter form-header">
-                <h3 class="filter-title form-title">Фильтр</h3>
-                <form class="filter-form">
-                    <div class="input-group">
-                        <label for="email">EMail</label>
-                        <input type="text" id="email" name="email" placeholder="Введите EMail пользователя">
-                    </div>
-                    <div class="input-group">
-                        <label for="student_id_number">Студенческий билет</label>
-                        <input type="text" id="student_id_number" name="student_id_number" placeholder="Введите номер студенческого билета">
-                    </div>
-                    <div class="input-group">
-                        <label for="group">Группа</label>
-                        <input type="text" id="group" name="group" placeholder="Введите группу">
-                    </div>
-                    <div class="input-group">
-                        <label for="year">Курс</label>
-                        <input type="text" id="year" name="year" placeholder="Введите курс">
-                    </div>
-                    <div class="filter-buttons">
-                        <button type="submit" class="filter-button apply-button">Применить</button>
-                        <button type="reset" class="filter-button reset-button">Сбросить</button>
-                    </div>
-                </form>
-            </div>
+            <h3 class="filter-title form-title">Фильтр</h3>
+            <form class="filter-form">
+                <div class="input-group">
+                    <label for="email">EMail</label>
+                    <input type="text" id="email" name="email" placeholder="Введите EMail пользователя">
+                </div>
+                <div class="input-group">
+                    <label for="student_id_number">Студенческий билет</label>
+                    <input type="text" id="student_id_number" name="student_id_number"
+                        placeholder="Введите номер студенческого билета">
+                </div>
+                <div class="input-group">
+                    <label for="group">Группа</label>
+                    <input type="text" id="group" name="group" placeholder="Введите группу">
+                </div>
+                <div class="input-group">
+                    <label for="year">Курс</label>
+                    <input type="text" id="year" name="year" placeholder="Введите курс">
+                </div>
+                <div class="filter-buttons">
+                    <button type="submit" class="filter-button apply-button">Применить</button>
+                    <button type="reset" class="filter-button reset-button">Сбросить</button>
+                </div>
+            </form>
         </div>
         <div class="content">
             <div class="body-top">
                 <div class="user-info">
-                    <h1 class="body-title">Зарегестрированные пользователи</h1>
+                    <h1 class="body-title">Зарегистрированные пользователи</h1>
                 </div>
                 <div class="search-bar">
                     <input type="text" id="search-input" class="search-input" placeholder="Поиск пользователей...">
@@ -73,7 +74,7 @@
             </div>
             <div class="user-list">
             </div>
-        </div>    
+        </div>
     </div>
 
     <div id="deleteModal" class="modal">
@@ -93,4 +94,5 @@
     <script src="/authentication.js"></script>
     <script src="/js/dropdown.js"></script>
 </body>
+
 </html>
