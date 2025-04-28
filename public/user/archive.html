@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Архив - UBook</title>
     <link rel="stylesheet" href="/styles/user_styles/archive_style.css">
 </head>
+
 <body class="archive-body">
     <header class="archive-header">
         <div class="header-left">
@@ -28,98 +30,61 @@
             </div>
         </div>
     </header>
-    
+    <div class="body-top">
+        <div class="statistics">
+        </div>
+        <div class="search-bar">
+            <input type="text" id="search-input" class="search-input" placeholder="Поиск книги...">
+            <button class="search-button">Поиск</button>
+            <span class="clear-search" id="clear-search">×</span>
+        </div>
+    </div>
+    <div class="dashboard-content">
+        <div class="sidebar">
+            <h3 class="filter-title">Фильтр</h3>
+            <form class="filter-form">
+                <div class="input-group">
+                    <label for="author">Автор</label>
+                    <input type="text" id="author" name="author" placeholder="Введите имя автора">
+                </div>
+                <div class="input-group">
+                    <label for="category">Категория</label>
+                    <input type="text" id="category" name="category" placeholder="Введите категорию">
+                </div>
+                <div class="input-group">
+                    <label for="year">Год издания</label>
+                    <input type="text" id="year" name="year" placeholder="Введите год">
+                </div>
+                <div class="input-group">
+                    <label for="udk">УДК</label>
+                    <input type="text" id="udk" name="udk" placeholder="Введите УДК">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-button hide-button">Скрыть</button>
+                    <button type="submit" class="filter-button apply-button">Применить</button>
+                    <button type="reset" class="filter-button reset-button">Сбросить</button>
+                </div>
+            </form>
+        </div>
         <div class="content">
-            <div class="body-top">
-                <div class="statistics">
-                    <div>Общее количество книг: 2</div>
-                    <div>Вовремя сдано: 1</div>
-                    <div>Просрочено: 1</div>
-                </div>
-                <div class="search-bar">
-                    <input type="text" id="search-input" class="search-input" placeholder="Поиск книги...">
-                    <button class="search-button">Поиск</button>
-                </div>
+            <div class="pagination">
+                <button class="page-button prev-page" disabled>Назад</button>
+                <span class="page-info">Страница 1 из 1</span>
+                <button class="page-button next-page" disabled>Вперед</button>
+                <select class="page-select"></select>
+                <h2 class="my-books">Архив</h2>
             </div>
-            <div class="filter-header">
-                <img src="/images/filter_icon.png" alt="Иконка фильтра" class="filter-icon">
-                <a href="#" class="filter-title-main">Фильтр</a>
-                <div class="pagination">
-                    <button class="page-button prev-page" disabled>Назад</button>
-                    <span class="page-info">Страница 1 из 1</span>
-                    <button class="page-button next-page" disabled>Вперед</button>
-                    <select class="page-select"></select>
-                </div>
-            </div>
-            <div class="book-filter item-filter">
-                <h3 class="filter-title">Фильтр</h3>
-                <form class="filter-form">
-                    <div class="input-group">
-                        <label for="author">Автор</label>
-                        <input type="text" id="author" name="author" placeholder="Введите имя автора">
-                    </div>
-                    <div class="input-group">
-                        <label for="category">Категория</label>
-                        <input type="text" id="category" name="category" placeholder="Введите категорию">
-                    </div>
-                    <div class="input-group">
-                        <label for="year">Год издания</label>
-                        <input type="text" id="year" name="year" placeholder="Введите год">
-                    </div>
-                    <div class="input-group">
-                        <label for="udk">УДК</label>
-                        <input type="text" id="udk" name="udk" placeholder="Введите УДК">
-                    </div>
-                    <div class="filter-buttons">
-                        <button class="filter-button hide-button">Скрыть</button>
-                        <button type="submit" class="filter-button apply-button">Применить</button>
-                        <button type="reset" class="filter-button reset-button">Сбросить</button>
-                    </div>
-                </form>
-            </div>      
-            <h2 class="my-books">Архив</h2>
             <div class="book-list">
-                <div class="book item">
-                    <h3 class="book-name">Основы высшей математики: Учебное пособие</h3>
-                    <h5 class="book-date">
-                        <div class="issuance-date">Дата выдачи: 23.11.2024</div>
-                        <div class="return-date on-time">Дата возврата: 07.12.2024</div>
-                    </h5>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Аскар Туганбаев</div>
-                            <div>Год издания: 2011</div>
-                            <div>УДК: 510</div>
-                            <div>Категория: Фундаментальные и общие проблемы математики. 
-                            Основания математики, математическая логика и т.п.</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Искусство Программирования</h3>
-                    <h5 class="book-date">
-                        <div class="issuance-date">Дата выдачи: 02.12.2024</div>
-                        <div class="return-date late">Дата возврата: 05.12.2024</div>
-                    </h5>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>  
             </div>
         </div>
-        <footer class="footer">
-            <p>&copy; 2024 UBook. Все права защищены.</p>
-        </footer>
-        <script src="/app.js"></script>
-        <script src="/authentication.js"></script>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 UBook. Все права защищены.</p>
+    </footer>
+    <script src="/js/dropdown.js"></script>
+    <script src="/authentication.js"></script>
+    <script src="/js/getUserName.js"></script>
+    <script type="module" src="/js/user/u_archive.js"></script>
 </body>
+
 </html>
