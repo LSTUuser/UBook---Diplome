@@ -201,22 +201,6 @@ html, body {
     font-size: 13px;
 }
 
-.search-bar {
-    display: flex;
-    align-items: flex-end;
-    width: 70%;
-    align-items: center;
-}
-
-.search-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
 .search-button {
     padding: 10px 20px;
     font-size: 16px;
@@ -232,8 +216,40 @@ html, body {
     background-color: #45a049;
 }
 
+.search-bar {
+    display: flex;
+    align-items: flex-end;
+    width: 70%;
+    align-items: center;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.clear-search {
+    position: absolute;
+    right: 110px; /* Позиция крестика (учитывая ширину кнопки поиска) */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #999;
+    display: none; /* Скрываем крестик по умолчанию */
+}
+
+.clear-search:hover {
+    color: #333; /* Изменение цвета при наведении */
+}
+
 .book-filter {
-    display: none;
+    display: flex;
     flex-direction: column;
     background-color: #f9f9f9;
     border: 1px solid #ddd;

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная - UBook</title>
     <link rel="stylesheet" href="/styles/user_styles/dashboard_style.css">
 </head>
+
 <body class="dashboard-body">
     <header class="dashboard-header">
         <div class="header-left">
@@ -20,7 +22,7 @@
         </nav>
         <div class="user-header">
             <img src="/images/user_icon.png" alt="Иконка пользователя" class="user-icon">
-            <h1 class="dashboard-title dropdown-toggle"><span id="user-name">Гуцалов Артём Витальевич</span></h1>
+            <h1 class="dashboard-title dropdown-toggle"><span id="user-name"></span></h1>
             <div class="dropdown-menu">
                 <a href="/user/my_books.html" class="dropdown-link">Мои книги</a>
                 <a href="/user/edit_profile.html" class="dropdown-link">Редактировать профиль</a>
@@ -28,45 +30,39 @@
             </div>
         </div>
     </header>
-    
+
     <div class="dashboard-content">
         <div class="sidebar">
-            <div class="filter-header">
-                <img src="/images/filter_icon.png" alt="Иконка фильтра" class="filter-icon">
-                <a href="#" class="filter-title-main">Фильтр</a>
-            </div>
-            <div class="book-filter item-filter">
-                <h3 class="filter-title">Фильтр</h3>
-                <form class="filter-form">
-                    <div class="input-group">
-                        <label for="author">Автор</label>
-                        <input type="text" id="author" name="author" placeholder="Введите имя автора">
-                    </div>
-                    <div class="input-group">
-                        <label for="category">Категория</label>
-                        <input type="text" id="category" name="category" placeholder="Введите категорию">
-                    </div>
-                    <div class="input-group">
-                        <label for="year">Год издания</label>
-                        <input type="text" id="year" name="year" placeholder="Введите год">
-                    </div>
-                    <div class="input-group">
-                        <label for="udk">УДК</label>
-                        <input type="text" id="udk" name="udk" placeholder="Введите УДК">
-                    </div>
-                    <div class="filter-buttons">
-                        <button class="filter-button hide-button">Скрыть</button>
-                        <button type="submit" class="filter-button apply-button">Применить</button>
-                        <button type="reset" class="filter-button reset-button">Сбросить</button>
-                    </div>
-                </form>
-            </div>
-            <a href="#" class="udc-name">Качество систем и программ (1)</a>
+            <h3 class="filter-title form-title">Фильтр</h3>
+            <form class="filter-form">
+                <div class="input-group">
+                    <label for="author">Автор</label>
+                    <input type="text" id="author" name="author" placeholder="Введите имя автора">
+                </div>
+                <div class="input-group">
+                    <label for="category">Категория</label>
+                    <input type="text" id="category" name="category" placeholder="Введите категорию">
+                </div>
+                <div class="input-group">
+                    <label for="year">Год издания</label>
+                    <input type="text" id="year" name="year" placeholder="Введите год">
+                </div>
+                <div class="input-group">
+                    <label for="udk">УДК</label>
+                    <input type="text" id="udk" name="udk" placeholder="Введите УДК">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-button hide-button">Скрыть</button>
+                    <button type="submit" class="filter-button apply-button">Применить</button>
+                    <button type="reset" class="filter-button reset-button">Сбросить</button>
+                </div>
+            </form>
+            <!-- <a href="#" class="udc-name">Качество систем и программ (1)</a>
             <a href="#" class="udc-name">Наука в целом (2)</a>
             <a href="#" class="udc-name">Управление предприятиями. Организация производства, торговли и транспорта (3)</a>
             <a href="#" class="udc-name">Строительство. Строительные материалы. Строительно-монтажные работы (1)</a>
             <a href="#" class="udc-name">Инженерное дело. Техника в целом (3)</a>
-            <a href="#" class="udc-name">Экономика. Народное хозяйство. Экономические науки (1)</a>
+            <a href="#" class="udc-name">Экономика. Народное хозяйство. Экономические науки (1)</a> -->
         </div>
         <div class="content">
             <div class="body-top">
@@ -76,6 +72,7 @@
                 <div class="search-bar">
                     <input type="text" id="search-input" class="search-input" placeholder="Поиск книги...">
                     <button class="search-button">Поиск</button>
+                    <span class="clear-search" id="clear-search">×</span>
                 </div>
             </div>
             <div class="pagination">
@@ -85,156 +82,16 @@
                 <select class="page-select"></select>
             </div>
             <div class="book-list">
-                <div class="book item">
-                    <h3 class="book-name">Совершенный код</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Стив Макконелл</div>
-                            <div>Год издания: 1993</div>
-                            <div>УДК: 004.45</div>
-                            <div>Категория: Cистемное программное обеспечение</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Искусство Программирования</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Гражданский процесс: учебное пособие</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Дипломная работа. Подготовка и оформление</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Дизайнер-верстальщик: самоучитель</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Фортепиано. Король музыкальных инструментов</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Фортепиано. Король музыкальных инструментов</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Фортепиано. Король музыкальных инструментов</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Фортепиано. Король музыкальных инструментов</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Фортепиано. Король музыкальных инструментов</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="book item">
-                    <h3 class="book-name">Фортепиано. Король музыкальных инструментов</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>                     
             </div>
         </div>
     </div>
     <footer class="footer">
-    <p>&copy; 2024 UBook. Все права защищены.</p>
+        <p>&copy; 2024 UBook. Все права защищены.</p>
     </footer>
-    <script src="/app.js"></script>
+    <script src="/js/dropdown.js"></script>
     <script src="/authentication.js"></script>
+    <script src="/js/getUserName.js"></script>
+    <script type="module" src="/js/user/u_dashboard.js"></script>
 </body>
+
 </html>

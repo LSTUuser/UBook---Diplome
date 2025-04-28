@@ -31,6 +31,8 @@ router.post('/login', async (req, res) => {
                 studentId: user.student_id_number,
                 group: user.group_name,
                 is_admin: user.is_admin,
+                fullName: user.user_full_name,
+                email: user.email,
                 iat: Math.floor(Date.now() / 1000),
             }, 
             JWT_SECRET,
@@ -46,14 +48,14 @@ router.post('/login', async (req, res) => {
          // Устанавливаем токен в HTTP-only cookie
          res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // В продакшене используем secure
+            secure: process.env.NODE_ENV === 'production' ? true : false, // В продакшене используем secure
             maxAge: 3600000 // 1 час в миллисекундах
         });
 
         res.status(200).json({
             success: true,
             user: {
-                username: user.username,
+                fullName: user.user_full_name,
                 email: user.email,
                 is_admin: user.is_admin
             }
@@ -68,9 +70,12 @@ router.post('/login', async (req, res) => {
 const authenticateJWT = (req, res, next) => {
     const token = req.cookies.token;
 
+    console.log('Токен:', token);
+
     if (token) {
         jwt.verify(token, JWT_SECRET, (err, user) => {
             if (err) {
+                console.error('Ошибка JWT:', err);
                 return res.sendStatus(403);
             }
             req.user = user;
@@ -86,7 +91,8 @@ router.get('/check', authenticateJWT, (req, res) => {
         isAuthenticated: true,
         user: {
             email: req.user.email,
-            is_admin: req.user.is_admin // Добавляем информацию о роли
+            is_admin: req.user.is_admin, // Добавляем информацию о роли
+            fullName: req.user.fullName
         }
     });
 });
