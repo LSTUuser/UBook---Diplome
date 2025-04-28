@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <title>Админ-панель - Литература - UBook</title>
     <link rel="stylesheet" href="/styles/admin_styles/dashboard_style.css">
 </head>
@@ -94,8 +97,8 @@
                     <input type="number" id="year" name="year" min="1" placeholder="Введите год" required>
                 </div>
                 <div class="input-group">
-                    <label for="udk">УДК</label>
-                    <input type="text" id="udk" name="udk" placeholder="Введите УДК" required>
+                    <label for="udkSelect">УДК</label>
+                    <select id="udkSelect" name="udk" class="form-control" required></select>
                 </div>
                 <div class="input-group">
                     <label for="quantity">Количество:</label>

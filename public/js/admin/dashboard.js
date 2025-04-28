@@ -8,8 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
     initFilter();
     initDropdown();
     initAddItem();
+    initFormReset();
     initAddBookButton();
     initCloseAddBookModal();
+    populateUdkSelect();
 });
 
 function sortBooks(literature) {
@@ -246,6 +248,20 @@ function initAddBookButton() {
     }
 }
 
+function initFormReset() {
+    const addBookForm = document.querySelector('.add-book-form');
+    
+    if (addBookForm) {
+        addBookForm.addEventListener('reset', function() {
+            // Специальный сброс для Select2 (поле УДК)
+            $('#udkSelect').val(null).trigger('change');
+            
+            // Дополнительно: сброс других кастомных полей если есть
+            // $('.other-select2-field').val(null).trigger('change');
+        });
+    }
+}
+
 function initCloseAddBookModal() {
     const closeModalButton = document.getElementById('closeModalButton');
     if (closeModalButton) {
@@ -254,72 +270,151 @@ function initCloseAddBookModal() {
             const addBookForm = document.querySelector('.add-modal-content form'); // Форма добавления книги
 
             addBookForm.reset(); // Сбросить данные в полях формы
+            $('#udkSelect').val(null).trigger('change');
             addModal.style.display = 'none'; // Закрытие модального окна
         });
     }
 }
 
+function initAddItem() {
+    // Инициализация Select2 для УДК
+    initUdkSelect();
 
-async function initAddItem() {
     const addBookForm = document.querySelector('.add-book-form');
-    const udcInput = addBookForm.querySelector('[name="udk"]'); // поле ввода УДК
-
-    // Сбрасываем ошибку при изменении значения в поле УДК
-    udcInput.addEventListener('input', async function () {
-        udcInput.setCustomValidity(''); // Сбрасываем ошибку
-        udcInput.reportValidity(); // Обновляем статус ошибки
-    });
-
-    addBookForm.addEventListener('submit', async function (event) {
+    
+    addBookForm.addEventListener('submit', async function(event) {
         event.preventDefault();
-
+        
         const formData = new FormData(addBookForm);
+        const udkValue = $('#udkSelect').val();
+        
         const bookData = {
             book_name: formData.get('name'),
             author_full_name: formData.get('author'),
             year_of_publishing: formData.get('year'),
-            udc_id: formData.get('udk'),
+            udc_id: udkValue,
             quantity: formData.get('quantity')
         };
 
-        console.log("Отправляемые данные на сервер:", bookData);
-
-        // Проверка на существование УДК
         try {
-            const checkUdcResponse = await fetch(`http://localhost:3000/api/book/udc_id/${bookData.udc_id}`);
-            const checkUdcData = await checkUdcResponse.json();
+            const response = await fetch('http://localhost:3000/api/book/books', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bookData)
+            });
 
-            if (checkUdcResponse.ok) {
-                // Если УДК существует, отправляем данные
-                const response = await fetch('http://localhost:3000/api/book/books', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(bookData)
-                });
+            if (response.ok) {
+                const newBook = await response.json();
+                const bookList = document.querySelector('.book-list');
+                const bookItem = createBookElement(newBook);
+                bookList.prepend(bookItem);
 
-                if (response.ok) {
-                    const newBook = await response.json();
-                    const bookList = document.querySelector('.book-list');
-                    const bookItem = createBookElement(newBook);
-                    bookList.prepend(bookItem); // Добавляем в начало списка
-
-                    addBookForm.reset();
-                    await fetchBooks();
-                    initPagination();
-                } else {
-                    alert('Ошибка при добавлении книги');
-                }
+                addBookForm.reset();
+                $('#udkSelect').val(null).trigger('change');
+                await fetchBooks();
+                initPagination();
             } else {
-                // Если УДК не найдено, показываем ошибку на форме
-                udcInput.setCustomValidity('УДК не найдено');
-                udcInput.reportValidity();
+                alert('Ошибка при добавлении книги');
             }
         } catch (error) {
-            console.error('Ошибка при проверке УДК:', error);
+            console.error('Ошибка при добавлении книги:', error);
         }
     });
+}
+
+// Инициализация выпадающего списка УДК с подгрузкой при прокрутке
+function initUdkSelect() {
+    $('#udkSelect').select2({
+        placeholder: "Введите УДК",
+        allowClear: false,
+        minimumInputLength: 1, // Начинать поиск после 1 символа
+        language: {
+            inputTooShort: function() {
+                return "Введите хотя бы 1 символ"; // Ваш кастомный текст
+            }
+        },
+        dropdownParent: $('#udkSelect').parent(), // Для корректного позиционирования
+        width: '100%', // Полная ширина
+        templateResult: function(data) {
+            // Кастомный рендеринг результатов
+            if (!data.id) return data.text;
+            return $('<span>').text(data.text).css({
+                'font-size': '14px',
+                'padding': '0'
+            });
+        },
+        ajax: {
+            url: 'http://localhost:3000/api/book/udcs/search',
+            dataType: 'json',
+            delay: 300,
+            data: function(params) {
+                return {
+                    query: params.term, // Поисковый запрос
+                    page: params.page || 1
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data.items.map(item => ({
+                        id: item.udc_id,
+                        text: item.udc_id
+                    })),
+                    pagination: {
+                        more: data.has_more
+                    }
+                };
+            },
+            cache: true
+        }
+    });
+}
+
+// Функция для загрузки списка УДК
+async function fetchUdcList() {
+    try {
+        const response = await fetch('http://localhost:3000/api/book/udcs');
+        if (!response.ok) {
+            throw new Error('Ошибка при загрузке УДК');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Ошибка:', error);
+        return [];
+    }
+}
+
+// Функция для заполнения select УДК
+async function populateUdkSelect() {
+    try {
+        const udcs = await fetchUdcList();
+        const udkSelect = document.getElementById('udkSelect');
+        
+        udkSelect.innerHTML = '';
+        
+        // Добавляем опции для каждого УДК
+        udcs.forEach(udc => {
+            const option = document.createElement('option');
+            option.value = udc.udc_id;
+            option.textContent = udc.udc_id; // Отображаем только идентификатор УДК
+            udkSelect.appendChild(option);
+        });
+
+        // Инициализируем Select2
+        $('#udkSelect').select2({
+            placeholder: "Выберите УДК",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "Не найдено УДК по запросу";
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error('Ошибка при загрузке УДК:', error);
+    }
 }
 
 
