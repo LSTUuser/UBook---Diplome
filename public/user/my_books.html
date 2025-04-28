@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Личный кабинет читателя - Мои книги</title>
     <link rel="stylesheet" href="/styles/user_styles/my_books_style.css">
 </head>
+
 <body class="dashboard-body">
     <header class="dashboard-header">
         <div class="header-left">
@@ -28,28 +30,18 @@
             </div>
         </div>
     </header>
-
-    <div class="content">
-        <div class="body-top">
-            <div class="user-info">
-                <h1 class="body-title">Добро пожаловать, <span id="user-name-body"></span>!</h1>
-            </div>
-            <div class="search-bar">
-                <input type="text" id="search-input" class="search-input" placeholder="Поиск книги...">
-                <button class="search-button">Поиск</button>
-            </div>
+    <div class="body-top">
+        <div class="user-info">
+            <h1 class="body-title">Добро пожаловать, <span id="user-name-body"></span>!</h1>
         </div>
-        <div class="filter-header">
-            <img src="/images/filter_icon.png" alt="Иконка фильтра" class="filter-icon">
-            <a href="#" class="filter-title-main">Фильтр</a>
-            <div class="pagination">
-                <button class="page-button prev-page" disabled>Назад</button>
-                <span class="page-info">Страница 1 из 1</span>
-                <button class="page-button next-page" disabled>Вперед</button>
-                <select class="page-select"></select>
-            </div>
+        <div class="search-bar">
+            <input type="text" id="search-input" class="search-input" placeholder="Поиск книги...">
+            <button class="search-button">Поиск</button>
+            <span class="clear-search" id="clear-search">×</span>
         </div>
-        <div class="book-filter item-filter">
+    </div>
+    <div class="dashboard-content">
+        <div class="sidebar">
             <h3 class="filter-title">Фильтр</h3>
             <form class="filter-form">
                 <div class="input-group">
@@ -74,9 +66,17 @@
                     <button type="reset" class="filter-button reset-button">Сбросить</button>
                 </div>
             </form>
-        </div>              
-        <h2 class="my-books">Мои книги</h2>
-        <div class="book-list">  
+        </div>
+        <div class="content">
+            <div class="pagination">
+                <button class="page-button prev-page" disabled>Назад</button>
+                <span class="page-info">Страница 1 из 1</span>
+                <button class="page-button next-page" disabled>Вперед</button>
+                <select class="page-select"></select>
+                <h2 class="my-books">Мои книги</h2>
+            </div>
+            <div class="book-list">
+            </div>
         </div>
     </div>
     <footer class="footer">
@@ -87,4 +87,5 @@
     <script src="/js/getUserName.js"></script>
     <script type="module" src="/js/user/u_my_books.js"></script>
 </body>
+
 </html>

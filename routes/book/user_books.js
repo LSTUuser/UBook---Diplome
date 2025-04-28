@@ -1,22 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../../database');
+const { authenticateJWT } = require('../../routes/auth');
 
 // Получение списка книг для текущего пользователя
-router.get('/user_books', async (req, res) => {
+router.get('/user_books', authenticateJWT, async (req, res) => {
     const { email } = req.user; 
     try {
         const result = await pool.query(`
-            SELECT DISTINCT
+            SELECT
                 l.book_id,
                 l.udc_id, 
                 w.author_id,
                 l.book_name,
                 l.year_of_publishing,
                 u.udc_name, 
-                l.quantity,
+                l.quantity, 
                 l.available,
-                a.author_full_name
+                a.author_full_name,
+                i.issuance_date,
+                i.return_date
             FROM 
                 literature l
             JOIN 

@@ -70,8 +70,6 @@ router.post('/login', async (req, res) => {
 const authenticateJWT = (req, res, next) => {
     const token = req.cookies.token;
 
-    console.log('Токен:', token);
-
     if (token) {
         jwt.verify(token, JWT_SECRET, (err, user) => {
             if (err) {
@@ -145,4 +143,4 @@ router.post('/register', async (req, res) => {
 });
 
 module.exports = router;
-exports.authenticateJWT = authenticateJWT;
+module.exports.authenticateJWT = authenticateJWT;
