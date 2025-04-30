@@ -294,3 +294,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', async function () {
+    const groupSelect = document.getElementById('group');
+    if (groupSelect) {
+        try {
+            const response = await fetch('/api/groups');
+            const result = await response.json();
+
+            if (result.success) {
+                // Сортируем группы алфавитно
+                const sortedGroups = result.groups.sort((a, b) => a.localeCompare(b));
+                
+                // Очищаем и заполняем select
+                groupSelect.innerHTML = '<option value="" disabled selected>Выберите группу</option>';
+                sortedGroups.forEach(group => {
+                    const option = new Option(group, group);
+                    groupSelect.add(option);
+                });
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+        }
+    }
+});
