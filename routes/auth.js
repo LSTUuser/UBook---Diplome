@@ -90,7 +90,8 @@ router.get('/check', authenticateJWT, (req, res) => {
         user: {
             email: req.user.email,
             is_admin: req.user.is_admin, // Добавляем информацию о роли
-            fullName: req.user.fullName
+            fullName: req.user.fullName,
+            group: req.user.group
         }
     });
 });

@@ -20,7 +20,7 @@
         </nav>
         <div class="user-header">
             <img src="/images/user_icon.png" alt="Иконка пользователя" class="user-icon">
-            <h1 class="recom-title dropdown-toggle"><span id="user-name">Гуцалов Артём Витальевич</span></h1>
+            <h1 class="recom-title dropdown-toggle"><span id="user-name"></span></h1>
             <div class="dropdown-menu">
                 <a href="/user/my_books.html" class="dropdown-link">Мои книги</a>
                 <a href="/user/edit_profile.html" class="dropdown-link">Редактировать профиль</a>
@@ -30,12 +30,7 @@
     </header>
     <div class="recom-content">
         <div class="sidebar">
-            <div class="filter-header">
-                <img src="/images/filter_icon.png" alt="Иконка фильтра" class="filter-icon">
-                <a href="#" class="filter-title-main">Фильтр</a>
-            </div>
-            <div class="book-filter item-filter">
-                <h3 class="filter-title">Фильтр</h3>
+                <h3 class="filter-title form-title">Фильтр</h3>
                 <form class="filter-form">
                     <div class="input-group">
                         <label for="author">Автор</label>
@@ -54,18 +49,16 @@
                         <input type="text" id="udk" name="udk" placeholder="Введите УДК">
                     </div>
                     <div class="filter-buttons">
-                        <button class="filter-button hide-button">Скрыть</button>
                         <button type="submit" class="filter-button apply-button">Применить</button>
                         <button type="reset" class="filter-button reset-button">Сбросить</button>
                     </div>
                 </form>
-            </div>
             <a href="#" class="udc-name">Качество систем и программ (2)</a>
         </div>
         <div class="content">
             <div class="body-top">
                 <div class="user-info">
-                    <h1 class="body-title">Список рекомендаций для специальности: <span id="speciality-name">АИ</span></h1>
+                    <h1 class="body-title">Список рекомендаций для группы: <span id="group-name"></span></h1>
                 </div>
                 <div class="search-bar">
                     <input type="text" id="search-input" class="search-input" placeholder="Поиск книги...">
@@ -91,27 +84,16 @@
                             <div>Категория: Качество систем и программ</div>
                         </div>
                     </div>
-                </div>   
-                <div class="book item">
-                    <h3 class="book-name">Искусство Программирования</h3>
-                    <button class="toggle-details">Больше информации</button>
-                    <div class="book-details item-details">
-                        <hr class="line">
-                        <div class="book-description">
-                            <div>Автор: Дональд Эрвин</div>
-                            <div>Год издания: 1968</div>
-                            <div>УДК: 681.142.2</div>
-                            <div>Категория: Точная механика</div>
-                        </div>
-                    </div>
-                </div>             
+                </div>       
             </div>
         </div>
     </div>
     <footer class="footer">
         <p>&copy; 2024 UBook. Все права защищены.</p>
     </footer>
-    <script src="/app.js"></script>
+    <script src="/js/dropdown.js"></script>
     <script src="/authentication.js"></script>
+    <script src="/js/getUserName.js"></script>
+    <script type="module" src="/js/user/u_rec_list.js"></script>
 </body>
 </html>

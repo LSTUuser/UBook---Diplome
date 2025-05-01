@@ -13,13 +13,13 @@ async function loadUserInfo() {
 
         if (data.isAuthenticated) {
             const headerNameElement = document.getElementById('user-name');
-            const bodyNameElement = document.getElementById('user-name-body');
+            const groupNameElement = document.getElementById('group-name');
 
             if (headerNameElement) {
                 headerNameElement.textContent = data.user.fullName;
             }
-            if (bodyNameElement) {
-                bodyNameElement.textContent = data.user.fullName;
+            if (groupNameElement) {
+                groupNameElement.textContent = data.user.group;
             }
         }
     } catch (error) {
