@@ -65,6 +65,7 @@ router.post('/books', async (req, res) => {
         }
 
         res.json(result.rows[0]);
+        
     } catch (error) {
         console.error('Ошибка при добавлении книги:', error);
         res.status(500).json({ message: 'Ошибка при добавлении книги' });
