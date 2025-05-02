@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 document.addEventListener('DOMContentLoaded', async function () {
-    const groupSelect = document.getElementById('group');
+    const groupSelect = document.getElementById('group-select');
     if (groupSelect) {
         try {
             const response = await fetch('/api/groups');
