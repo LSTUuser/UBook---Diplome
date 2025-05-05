@@ -1,5 +1,6 @@
 import { initPagination } from '../pagination.js';
-document.addEventListener("DOMContentLoaded", function () {
+import { checkUnreadNotifications } from '../checkUnredNotif.js';
+document.addEventListener("DOMContentLoaded", async function () {
     // Группировка функций
     fetchBooks().then(() => {
         initPagination(); // Вызови пагинацию после загрузки книг
@@ -7,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     initFilter();
     initDropdown();
+    await checkUnreadNotifications();
 });
 
 function updateStatistics(literature) {

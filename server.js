@@ -37,6 +37,8 @@ const addIssuanceRoutes = require('./routes/issuance/add_issuance');
 const deleteIssuanceRoutes = require('./routes/issuance/delete_issuance');
 const closeIssuanceRoutes = require('./routes/issuance/close_issuance');
 
+const notificationRoutes = require('./routes/notification/notifications');
+
 app.use('/api/auth', authRoutes);
 app.use('/api', emailRoutes);
 app.use('/api', groupRoutes);
@@ -59,6 +61,8 @@ app.use('/api/issuance', issuancesRoutes);
 app.use('/api/issuance', addIssuanceRoutes);
 app.use('/api/issuance', deleteIssuanceRoutes);
 app.use('/api/issuance', closeIssuanceRoutes);
+
+app.use('/api/notification', notificationRoutes);
 
 // Маршруты для пользовательского интерфейса
 app.use('/user', express.static(path.join(__dirname, 'public', 'user')));

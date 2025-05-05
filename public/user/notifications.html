@@ -15,7 +15,7 @@
         <nav class="nav-menu">
             <a href="/user/dashboard.html" class="nav-link">Главная</a>
             <a href="/user/recomended_list.html" class="nav-link">Список рекомендаций</a>
-            <a href="/user/notifications.html" class="nav-link">Уведомления</a>
+            <a href="/user/notifications.html" class="nav-link" id="nav-notifications-link">Уведомления</a>
             <a href="/user/archive.html" class="nav-link">Архив</a>
         </nav>
         <div class="user-header">
@@ -31,27 +31,14 @@
     <div class="content">
         <h2 class="notifications-head">Уведомления</h2>
         <div class="notifications-list">
-            <div class="notification">
-                <img src="/images/notification_logo.png" alt="Логотип уведомления" class="notification-logo">
-                <div class="notification-info">
-                    <h3 class="notification-name">Срок сдачи книги!</h3>
-                    <p class="notification-description">Срок сдачи книги Совершенный код подходит к концу!</p>
-                </div>
-            </div>
-            <div class="notification">
-                <img src="/images/notification_logo.png" alt="Логотип уведомления" class="notification-logo">
-                <div class="notification-info">
-                    <h3 class="notification-name">Книга просрочена!</h3>
-                    <p class="notification-description">Книга Искусство Программирования просрочена! 
-                        Посетите библиотеку для дальнейшей сдачи!</p>
-                </div>
-            </div>
         </div>
     </div>
     <footer class="footer">
         <p>&copy; 2024 UBook. Все права защищены.</p>
     </footer>
-    <script src="/app.js"></script>
+    <script src="/js/dropdown.js"></script>
     <script src="/authentication.js"></script>
+    <script src="/js/getUserName.js"></script>
+    <script type="module" src="/js/user/u_notifications.js"></script>
 </body>
 </html>

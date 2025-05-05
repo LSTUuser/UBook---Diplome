@@ -16,9 +16,18 @@ router.post('/issuances', async (req, res) => {
             RETURNING issuance_id, book_id, email, issuance_date, return_date;
         `, [book_id, email, issuance_date, return_date]);
 
-        console.log("Выдача добавлена:", result.rows[0]);
+        const issuance = result.rows[0];
+        console.log("Выдача добавлена:", issuance);
 
-        res.json(result.rows[0]);
+        // 2. Добавление уведомления
+        await pool.query(`
+            INSERT INTO notification (issuance_id, email, return_date, is_read)
+            VALUES ($1, $2, $3, FALSE);
+        `, [issuance.issuance_id, issuance.email, issuance.return_date]);
+
+        console.log("Уведомление добавлено для:", issuance.email);
+
+        res.json(issuance);
     } catch (error) {
         console.error('Ошибка при добавлении выдачи:', error);
         res.status(500).json({ message: 'Ошибка при добавлении выдачи' });
