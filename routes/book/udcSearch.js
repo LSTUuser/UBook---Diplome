@@ -10,8 +10,7 @@ router.get('/search', async (req, res) => {
         const result = await pool.query(
             `SELECT udc_id FROM udc 
              WHERE udc_id ILIKE $1
-             ORDER BY udc_id
-             LIMIT 20`, // Фиксированный лимит
+             `, // Фиксированный лимит
             [`%${query}%`]
         );
 

@@ -64,8 +64,54 @@ router.post('/books', async (req, res) => {
             console.log("Книга и автор связаны");
         }
 
-        res.json(result.rows[0]);
-        
+        // 1. Получаем название UDC для семантического сравнения
+        const udcInfo = await pool.query('SELECT udc_name FROM udc WHERE udc_id = $1', [udc_id]);
+        const udcName = udcInfo.rows[0].udc_name;
+
+        // 3. Сравниваем с помощью модели (через API)
+        const compareResponse = await fetch('http://localhost:3000/api/compare-texts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                text1: udcName,
+            })
+        });
+
+        if (!compareResponse.ok) {
+            throw new Error('Ошибка при вызове API сравнения текстов');
+        }
+
+        const topMatches = await compareResponse.json();
+        const bestSubject = topMatches[0]; // первый из top-5
+        const similarityScore = bestSubject.score;
+
+        console.log(similarityScore);
+        // 6. Назначение только если сходство > 0.7
+        if (similarityScore >= 0.7) {
+            // Получаем специальности для этой дисциплины
+            const specialities = await pool.query(
+                'SELECT DISTINCT speciality_id FROM educational_period WHERE subject_id = $1',
+                [bestSubject.subject_id]
+            );
+            // Добавляем записи в assigned_literature
+            for (const spec of specialities.rows) {
+                await pool.query(`
+                INSERT INTO assigned_literature (book_id, speciality_id, subject_id)
+                VALUES ($1, $2, $3)
+            `, [result.rows[0].book_id, spec.speciality_id, bestSubject.subject_id]);
+            }
+
+            console.log(`Книга назначена: ${bestSubject.subject_name} (сходство: ${similarityScore.toFixed(2)})`);
+        } else {
+            console.log(`Не найдено подходящих дисциплин (макс. сходство: ${similarityScore.toFixed(2)})`);
+        }
+
+        res.json({
+            ...result.rows[0],
+            assigned_subject: similarityScore >= 0.7 ? bestSubject.subject_name : null,
+            similarity_score: similarityScore
+        });
+
     } catch (error) {
         console.error('Ошибка при добавлении книги:', error);
         res.status(500).json({ message: 'Ошибка при добавлении книги' });

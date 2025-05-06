@@ -5,6 +5,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const cookieParser = require('cookie-parser');
+const { loadModel } = require('./modelLoader');
 
 // Middleware
 app.use(cors());
@@ -64,6 +65,13 @@ app.use('/api/issuance', closeIssuanceRoutes);
 
 app.use('/api/notification', notificationRoutes);
 
+// Подключение новых API-роутов
+const assignLiteratureRoutes = require('./routes/recommendations/assign_literature');
+app.use('/api/recommendations', assignLiteratureRoutes);
+
+const assignedLiteratureRoutes = require('./routes/recommendations/assign_literature');  // Путь к файлу assigned_literature.js
+app.use('/api', assignedLiteratureRoutes);  // Это гарантирует, что маршрут будет доступен по /api/compare-texts
+
 // Маршруты для пользовательского интерфейса
 app.use('/user', express.static(path.join(__dirname, 'public', 'user')));
 
@@ -71,6 +79,10 @@ app.use('/user', express.static(path.join(__dirname, 'public', 'user')));
 app.use('/admin', express.static(path.join(__dirname, 'public', 'admin')));
 
 // Запуск сервера
-app.listen(PORT, () => {
-    console.log(`Сервер запущен на http://localhost:${PORT}`);
+loadModel().then(() => {
+  app.listen(PORT, () => {
+      console.log(`Сервер запущен на http://localhost:${PORT}`);
+  });
+}).catch((err) => {
+  console.error("Ошибка при загрузке модели:", err);
 });
