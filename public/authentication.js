@@ -317,3 +317,114 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 });
+
+// Добавляем новую функцию для загрузки данных профиля
+async function loadProfileData() {
+    try {
+        const response = await fetch('/api/user/profile', {
+            credentials: 'include'
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Ошибка при загрузке данных профиля:', error);
+        return null;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+    if (window.location.pathname.includes('/user/edit_profile.html')) {
+        // Загружаем данные профиля
+        const profileData = await loadProfileData();
+        console.log('Данные профиля:', profileData);
+        
+        if (profileData?.success) {
+            // Заполняем поля формы
+            document.getElementById('fullname').value = profileData.user.fullName || '';
+            document.getElementById('id-card').value = profileData.user.idCard || '';
+            
+            // Загружаем список групп
+            const groupSelect = document.getElementById('group-select');
+            try {
+                const response = await fetch('/api/groups');
+                const result = await response.json();
+
+                if (result.success) {
+                    groupSelect.innerHTML = '<option value="" disabled>Выберите группу</option>';
+                    // Сортируем группы
+                    const sortedGroups = result.groups.sort();
+                    // Добавляем группы в select
+                    sortedGroups.forEach(group => {
+                        const option = new Option(group, group);
+                        
+                        // Устанавлием выбранной текущую группу пользователя
+                        if (group.trim().toLowerCase() === (profileData.user.group || '').trim().toLowerCase()) {
+                            option.selected = true;
+                        }
+                        groupSelect.add(option);
+                    });
+                    
+                    // Если группа не установилась, попробуем найти похожую
+                    if (!groupSelect.value && profileData.user.group) {
+                        const similarGroup = sortedGroups.find(g => 
+                            g.includes(profileData.user.group) || 
+                            profileData.user.group.includes(g)
+                        );
+                        
+                        if (similarGroup) {
+                            groupSelect.value = similarGroup;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки групп:', error);
+            }
+        }
+
+        // Обработчик отправки формы
+        const editForm = document.querySelector('.edit-container form');
+        if (editForm) {
+            editForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                
+                try {
+                    const response = await fetch('/api/user/update_profile', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            fullname: document.getElementById('fullname').value,
+                            idCard: document.getElementById('id-card').value,
+                            group: document.getElementById('group-select').value
+                        }),
+                        credentials: 'include'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Показываем сообщение на 1.5 секунды перед переадресацией
+                        const message = document.createElement('div');
+                        message.textContent = 'Данные успешно обновлены!';
+                        message.style.position = 'fixed';
+                        message.style.bottom = '20px';
+                        message.style.right = '20px';
+                        message.style.padding = '10px 20px';
+                        message.style.background = '#4CAF50';
+                        message.style.color = 'white';
+                        message.style.borderRadius = '5px';
+                        message.style.zIndex = '1000';
+                        document.body.appendChild(message);
+                        
+                        setTimeout(() => {
+                            window.location.href = '/user/dashboard.html';
+                        }, 1500);
+                    } else {
+                        alert('Ошибка: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    alert('Ошибка сети при обновлении данных');
+                }
+            });
+        }
+    }
+});

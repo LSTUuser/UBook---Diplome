@@ -41,6 +41,8 @@ const closeIssuanceRoutes = require('./routes/issuance/close_issuance');
 
 const notificationRoutes = require('./routes/notification/notifications');
 
+const profileRoutes = require('./routes/user/edit_profile');
+
 app.use('/api/auth', authRoutes);
 app.use('/api', emailRoutes);
 app.use('/api', groupRoutes);
@@ -66,6 +68,8 @@ app.use('/api/issuance', deleteIssuanceRoutes);
 app.use('/api/issuance', closeIssuanceRoutes);
 
 app.use('/api/notification', notificationRoutes);
+
+app.use('/api/user', profileRoutes);
 
 // Подключение новых API-роутов
 const assignLiteratureRoutes = require('./routes/recommendations/assign_literature');

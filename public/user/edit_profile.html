@@ -13,25 +13,20 @@
     </div>
     <div class="edit-container">
         <h1 class="edit-title">Редактирование профиля</h1>
-        <form action="/register" method="POST">
+        <form id="editProfileForm" action="/register" method="POST">
             <div class="input-group">
                 <label for="fullname">ФИО</label>
                 <input type="text" id="fullname" name="fullname" required>
             </div>
             <div class="input-group">
                 <label for="id-card">Номер студенческого билета</label>
-                <input type="text" id="id-card" name="id-card" required>
+                <input type="text" id="id-card" name="id-card" maxlength="10" minlength="10" required>
             </div>
             <div class="input-group">
                 <label for="group">Группа</label>
-                <input type="text" id="group" name="group" list="group-options" required>
-                <datalist id="group-options">
-                    <option value="АИ">
-                    <option value="ПИ">
-                    <option value="АС">
-                    <option value="ЭО">
-                    <option value="ЭП">
-                </datalist>
+                <select id="group-select" name="group" class="reg-select" required>
+                    <option value="" disabled selected>Выберите группу</option>
+                </select>
             </div>
             <button type="submit" class="reg-button">Изменить данные</button>
         </form>
