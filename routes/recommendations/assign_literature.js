@@ -7,7 +7,7 @@ const pool = require('../../database');
 
 async function translateRussianToEnglish(text) {
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ru&tl=en&dt=t&q=${encodeURIComponent(text)}`;
-    
+
     try {
         const response = await fetch(url);
         const data = await response.json();
@@ -55,27 +55,20 @@ router.post('/compare-texts', async (req, res) => {
         const embeddingsArray = embeddingTensor.arraySync();
         const mainEmbedding = embeddingsArray[0];
 
-        const results = [];
+        // Векторизованное сравнение
+        const tfMain = tf.tensor2d([mainEmbedding]); // [1, dim]
+        const tfSubjects = tf.tensor2d(subjects.map(s => s.embedding)); // [N, dim]
 
-        // Сравнение с прогресс-логгированием
-        for (let i = 0; i < subjects.length; i++) {
-            const subject = subjects[i];
-            const textEmbedding = subject.embedding;
+        // Косинусные расстояния: dot(a, b) / (||a|| * ||b||)
+        const dotProducts = tf.matMul(tfSubjects, tfMain, false, true).arraySync(); // [N, 1]
 
-            const dotProduct = tf.tensor(mainEmbedding).dot(tf.tensor(textEmbedding)).arraySync();
-            const normA = Math.sqrt(mainEmbedding.reduce((sum, val) => sum + val * val, 0));
-            const normB = Math.sqrt(textEmbedding.reduce((sum, val) => sum + val * val, 0));
-            const similarity = dotProduct / (normA * normB);
+        const mainNorm = Math.sqrt(mainEmbedding.reduce((sum, val) => sum + val * val, 0));
+        const subjectNorms = subjects.map(s => Math.sqrt(s.embedding.reduce((sum, val) => sum + val * val, 0)));
 
-            results.push(similarity);
+        const results = dotProducts.map((dp, i) => dp[0] / (mainNorm * subjectNorms[i]));
 
-            if (i - lastLogged >= logInterval || i === subjects.length - 1) {
-                const progress = ((i + 1) / subjects.length * 100).toFixed(1);
-                const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-                console.log(`Обработано ${i + 1}/${subjects.length} (${progress}%) за ${elapsed} сек.`);
-                lastLogged = i;
-            }
-        }
+        console.log(`Обработано ${subjects.length} дисциплин за ${(Date.now() - startTime) / 1000} сек.`);
+
 
         const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
         console.log(`Сравнение завершено за ${totalTime} секунд`);
@@ -88,13 +81,13 @@ router.post('/compare-texts', async (req, res) => {
             translated_text: translatedText,
             score: results[index]
         })).sort((a, b) => b.score - a.score).slice(0, 5);
-        
+
         console.log("Топ-5 наиболее подходящих дисциплин:");
         topResults.forEach((item, i) => {
             console.log(`${i + 1}. "${item.subject_name}" - сходство: ${item.score.toFixed(4)}`);
         });
 
-        res.json(topResults); 
+        res.json(topResults);
     } catch (err) {
         console.error('Ошибка при сравнении текстов:', err);
         res.status(500).json({ error: 'Ошибка при сравнении текстов' });

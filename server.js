@@ -29,6 +29,7 @@ const addBookRoutes = require('./routes/book/add_book');
 const deleteBookRoutes = require('./routes/book/delete_book');
 const userBooksRoutes = require('./routes/book/user_books');
 const userArchiveRoutes = require('./routes/book/user_archive');
+const userRecommendations = require('./routes/book/user_recommendations')
 
 const usersRoutes = require('./routes/user/users');
 const deleteUserRoutes = require('./routes/user/delete_user');
@@ -54,6 +55,7 @@ app.use('/api/book', addBookRoutes);
 app.use('/api/book', deleteBookRoutes);
 app.use('/api/book', userBooksRoutes);
 app.use('/api/book', userArchiveRoutes);
+app.use('/api/book', userRecommendations);
 
 app.use('/api/user', usersRoutes);
 app.use('/api/user', deleteUserRoutes);

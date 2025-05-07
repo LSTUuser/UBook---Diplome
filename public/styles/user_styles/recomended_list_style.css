@@ -202,6 +202,7 @@ html, body {
     align-items: flex-end;
     width: 50%;
     align-items: center;
+    position: relative;
 }
 
 .search-input {
@@ -226,6 +227,21 @@ html, body {
 
 .search-button:hover {
     background-color: #45a049;
+}
+
+.clear-search {
+    position: absolute;
+    right: 110px; /* Позиция крестика (учитывая ширину кнопки поиска) */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #999;
+    display: none; /* Скрываем крестик по умолчанию */
+}
+
+.clear-search:hover {
+    color: #333; /* Изменение цвета при наведении */
 }
 
 .book-list {
