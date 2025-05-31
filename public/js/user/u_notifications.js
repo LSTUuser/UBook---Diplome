@@ -15,18 +15,30 @@ async function loadNotifications() {
 
         if (!res.ok) throw new Error('Ошибка при загрузке уведомлений');
 
-        const notifications = await res.json();
-        console.log(notifications);
+        const allNotifications = await res.json(); // Переименовали константу
+        console.log(allNotifications);
         const container = document.querySelector('.notifications-list');
         container.innerHTML = '';
 
-        notifications.forEach(n => {
+        // Сортируем и берем 6 последних (не изменяем исходную константу)
+        const lastSixNotifications = [...allNotifications]
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            .slice(0, 6);
+
+        if (lastSixNotifications.length === 0) {
+            container.innerHTML = '<p>Уведомлений нет</p>';
+            return;
+        }
+
+        lastSixNotifications.forEach(n => {
             const el = renderNotification(n);
             container.appendChild(el);
         });
 
     } catch (err) {
         console.error(err);
+        const container = document.querySelector('.notifications-list');
+        container.innerHTML = '<p>Ошибка при загрузке уведомлений</p>';
     }
 }
 
@@ -54,7 +66,7 @@ function getTitle(returnDateStr) {
 
     if (diff < 0) return 'Книга просрочена!';
     if (diff <= 3) return 'Срок сдачи книги подходит к концу!';
-    return 'Оповещение';
+    return 'Вы взяли книгу';
 }
 
 function getDescription(returnDateStr, bookName) {
@@ -69,6 +81,10 @@ function getDescription(returnDateStr, bookName) {
     } else if (diff <= 3) {
         // Описание для книги, срок сдачи которой близок
         return `Не забудьте сдать книгу "${bookName}" в библиотеку. Срок сдачи: ${date}.`;
+    }
+    else {
+        // Новое описание для только что взятых книг
+        return `Вы взяли книгу "${bookName}" из библиотеки. Срок сдачи: ${date}.`;
     }
 }
 

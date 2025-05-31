@@ -21,10 +21,17 @@ export function initPagination(selector = ".item", itemsPerPage = 10) {
     }
 
     function updatePagination() {
-        const totalPages = Math.ceil(Items.length / ItemsPerPage);
-        if (pageInfo) pageInfo.textContent = `Страница ${currentPage} из ${totalPages}`;
-        if (prevPageBtn) prevPageBtn.disabled = currentPage === 1;
-        if (nextPageBtn) nextPageBtn.disabled = currentPage === totalPages;
+        const totalPages = Math.max(1, Math.ceil(Items.length / ItemsPerPage)); // Всегда минимум 1 страница
+        currentPage = Math.min(currentPage, totalPages); // Не позволяем текущей странице быть больше общего количества
+        
+        if (pageInfo) {
+            pageInfo.textContent = `Страница ${currentPage} из ${totalPages}`;
+        }
+        
+        // Блокируем обе кнопки, если элементов нет
+        const noItems = Items.length === 0;
+        if (prevPageBtn) prevPageBtn.disabled = noItems || currentPage === 1;
+        if (nextPageBtn) nextPageBtn.disabled = noItems || currentPage === totalPages;
 
         if (pageSelect) {
             pageSelect.innerHTML = "";
@@ -35,6 +42,7 @@ export function initPagination(selector = ".item", itemsPerPage = 10) {
                 option.selected = i === currentPage;
                 pageSelect.appendChild(option);
             }
+            pageSelect.disabled = noItems; // Отключаем select, если элементов нет
         }
     }
 
@@ -49,7 +57,7 @@ export function initPagination(selector = ".item", itemsPerPage = 10) {
 
     if (nextPageBtn) {
         nextPageBtn.addEventListener("click", () => {
-            const totalPages = Math.ceil(Items.length / ItemsPerPage);
+            const totalPages = Math.max(1, Math.ceil(Items.length / ItemsPerPage));
             if (currentPage < totalPages) {
                 currentPage++;
                 displayItems();

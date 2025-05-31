@@ -64,6 +64,10 @@ async function fetchIssuances(query = "", filters = {}) {
             );
         }
 
+        if (issuances.length === 0) {
+            issuanceList.innerHTML = '<p>Выдачи не найдены</p>';
+            return;
+        }
 
         const issuanceList = document.querySelector('.issuance-list');
         issuanceList.innerHTML = ''; // Очистка списка перед вставкой новых данных
@@ -298,6 +302,7 @@ async function initAddItem() {
         });
 
         if (response.ok) {
+            modal.style.display = 'none';
             const newIssuance = await response.json();
             const issuanceList = document.querySelector('.issuance-list');
             const issuanceItem = createIssuanceElement(newIssuance);
@@ -515,11 +520,11 @@ async function downloadDebtorsList() {
         const today = new Date();
 
         const debtors = issuances.filter(issuance => {
-            // Проверяем, если дата возврата прошла, а return_period еще не заполнен
+        
             const returnDate = new Date(issuance.return_date);
             const returnPeriod = issuance.return_period ? new Date(issuance.return_period) : null;
 
-            return returnDate < today && !returnPeriod; // Книга просрочена и не сдана
+            return returnDate < today && !returnPeriod;
         });
 
         if (debtors.length === 0) {
@@ -541,7 +546,7 @@ async function downloadDebtorsList() {
             csvContent += row.join(';') + '\n';
         });
 
-        // 🔥 Вставляем BOM перед CSV — это решает проблему кодировки
+        
         const csvWithBom = '\uFEFF' + csvContent;
         const blob = new Blob([csvWithBom], { type: 'text/csv;charset=utf-8;' });
 

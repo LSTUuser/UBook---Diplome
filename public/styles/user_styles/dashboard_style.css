@@ -435,16 +435,26 @@ html, body {
     gap: 20px;
 }
 
+.book-cover {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
 .book-details {
     display: none;
     width: 100%;
 }
 
 .book-name {
-    flex-shrink: 0;
-    white-space: nowrap;
+    flex: 1;
+    white-space: normal;
     text-align: left;
     margin: 0;
+    min-width: 0;
+    word-wrap: break-word;
 }
 
 .line {
@@ -468,7 +478,6 @@ html, body {
     color: white;
     border: none;
     border-radius: 4px;
-    text-align: center;
 }
 
 .toggle-details:hover {

@@ -96,6 +96,58 @@ router.get('/check', authenticateJWT, (req, res) => {
     });
 });
 
+// Добавьте этот роут в auth.js
+router.post('/refresh-token', authenticateJWT, async (req, res) => {
+    try {
+        // Получаем свежие данные пользователя из БД
+        const userResult = await pool.query(
+            'SELECT * FROM "user" WHERE email = $1', 
+            [req.user.email]
+        );
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({ success: false });
+        }
+
+        const user = userResult.rows[0];
+
+        // Создаем новый токен с актуальными данными
+        const newToken = jwt.sign(
+            { 
+                sub: user.email,
+                studentId: user.student_id_number,
+                group: user.group_name,
+                is_admin: user.is_admin,
+                fullName: user.user_full_name,
+                email: user.email,
+                iat: Math.floor(Date.now() / 1000),
+            }, 
+            JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        // Устанавливаем новый токен в cookie
+        res.cookie('token', newToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 3600000
+        });
+
+        res.json({
+            success: true,
+            user: {
+                fullName: user.user_full_name,
+                email: user.email,
+                is_admin: user.is_admin,
+                group: user.group_name
+            }
+        });
+    } catch (error) {
+        console.error('Ошибка при обновлении токена:', error);
+        res.status(500).json({ success: false });
+    }
+});
+
 router.post('/logout', (req, res) => {
     const token = req.cookies.token;
     

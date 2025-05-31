@@ -33,6 +33,7 @@ const userRecommendations = require('./routes/book/user_recommendations')
 
 const usersRoutes = require('./routes/user/users');
 const deleteUserRoutes = require('./routes/user/delete_user');
+const updateUserRoutes = require('./routes/user/update_user');
 
 const issuancesRoutes = require('./routes/issuance/issuances');
 const addIssuanceRoutes = require('./routes/issuance/add_issuance');
@@ -61,6 +62,7 @@ app.use('/api/book', userRecommendations);
 
 app.use('/api/user', usersRoutes);
 app.use('/api/user', deleteUserRoutes);
+app.use('/api/user', updateUserRoutes);
 
 app.use('/api/issuance', issuancesRoutes);
 app.use('/api/issuance', addIssuanceRoutes);

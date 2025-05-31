@@ -47,6 +47,11 @@ async function fetchUsers(query = "", filters = {}) {
             );
         }
 
+        if (users.length === 0) {
+            userList.innerHTML = '<p>Пользователи не найдены</p>';
+            return;
+        }
+
         const userList = document.querySelector('.user-list');
         userList.innerHTML = ''; // Очистка списка перед вставкой новых данных
 
@@ -66,7 +71,7 @@ async function fetchUsers(query = "", filters = {}) {
 function createUserElement(user) {
     const userItem = document.createElement('div');
     userItem.classList.add('user', 'item');
-    userItem.dataset.id = user.user_id; // Сохраняем ID книги
+    userItem.dataset.email = user.email; // Сохраняем ID книги
 
     userItem.innerHTML =
     `
@@ -83,19 +88,19 @@ function createUserElement(user) {
                         <form class="filter-form">
                             <div class="input-group">
                                 <label for="edit-name">ФИО</label>
-                                <input type="text" id="edit-name" name="name" placeholder="Введите ФИО пользователя" value="${user.user_full_name}" required>
+                                <input type="text" id="edit-name" name="full_name" placeholder="Введите ФИО пользователя" value="${user.user_full_name}" required>
                             </div>
                             <div class="input-group">
                                 <label for="edit-author">Студенческий билет</label>
-                                <input type="text" id="edit-author" name="author" placeholder="Введите номер студенческого билета пользователя" value="${user.student_id_number}" required>
+                                <input type="text" id="edit-author" name="student_id" placeholder="Введите номер студенческого билета пользователя" value="${user.student_id_number}" maxlength="10" minlength="10" required>
                             </div>
                             <div class="input-group">
                                 <label for="edit-year">Группа</label>
-                                <input type="text" id="edit-year" name="year" placeholder="Введите группу пользователя" value="${user.group_name}" required>
+                                <input type="text" id="edit-year" name="group" placeholder="Введите группу пользователя" value="${user.group_name}" required>
                             </div>
                             <div class="input-group">
                                 <label for="edit-udk">Курс</label>
-                                <input type="text" id="edit-udk" name="udk" placeholder="Введите номер курса пользователя" value="${user.year_of_studying}" required>
+                                <input type="text" id="edit-udk" name="year" placeholder="Введите номер курса пользователя" value="${user.year_of_studying}" required>
                             </div>
                             <div class="filter-buttons">
                                 <button type="button" class="filter-button hide-button hide-edit-button">Отмена</button>
@@ -180,6 +185,69 @@ function createUserElement(user) {
 
     return userItem;
 }
+
+async function updateUser(userItem) {
+    const userEmail = userItem.dataset.email;
+    const form = userItem.querySelector('.edit-item-form form');
+
+    const formData = new FormData(form);
+    const updatedUser = {
+        user_full_name: formData.get("full_name").trim(),
+        student_id_number: formData.get("student_id").trim(),
+        group_name: formData.get("group").trim(),
+        year_of_studying: formData.get("year").trim()
+    };
+
+    // Проверка: существует ли пользователь с таким же student_id_number
+    try {
+        const usersResponse = await fetch(`http://localhost:3000/api/user/users`);
+        const users = await usersResponse.json();
+
+        const duplicate = users.find(user =>
+            user.student_id_number === updatedUser.student_id_number &&
+            user.email !== userEmail // Исключаем текущего пользователя
+        );
+
+        if (duplicate) {
+            const idInput = form.querySelector('[name="student_id"]');
+            idInput.setCustomValidity("Пользователь с таким номером студенческого билета уже существует.");
+            idInput.reportValidity();
+
+            idInput.addEventListener("input", function () {
+                idInput.setCustomValidity("");
+            });
+            return;
+        }
+    } catch (error) {
+        console.error("Ошибка при проверке уникальности номера:", error);
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/user/users/${userEmail}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedUser)
+        });
+
+        if (!response.ok) {
+            const groupInput = form.querySelector('[name="group"]');
+            groupInput.setCustomValidity("Группа не найдена.");
+            groupInput.reportValidity();
+
+            groupInput.addEventListener("input", function () {
+                groupInput.setCustomValidity("");
+            });
+            throw new Error('Ошибка при обновлении пользователя');
+        }
+
+        console.log("Данные обновлены успешно");
+        await fetchUsers();
+
+    } catch (error) {
+        console.error('Ошибка:', error.message);
+    }
+}
+
 
 async function initDeleteItem(userItem) {
     const studentId = userItem.querySelector('.user-cover').dataset.studentId;

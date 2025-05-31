@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     initFilter();
     initDropdown();
     await checkUnreadNotifications();
+    await loadUserInfo(true);
 });
 
 async function fetchBooks(query = "", filters = {}) {
@@ -51,10 +52,10 @@ async function fetchBooks(query = "", filters = {}) {
         const bookList = document.querySelector('.book-list');
         bookList.innerHTML = ''; // Очистка списка перед вставкой новых данных
 
-        // if (literature.length === 0) {
-        //     bookList.innerHTML = '<p>У вас нет выданных книг</p>';
-        //     return;
-        // }
+        if (literature.length === 0) {
+            bookList.innerHTML = '<p>Книги не найдены</p>';
+            return;
+        }
 
         literature.forEach(book => {
             const bookItem = createBookElement(book);
@@ -74,8 +75,10 @@ function createBookElement(book) {
     bookItem.dataset.id = book.book_id; // Сохраняем ID книги
 
     bookItem.innerHTML = `
-            <h3 class="book-name">${book.book_name}</h3>
-            <button class="toggle-details">Больше информации</button>
+            <div class="book-cover item-cover">
+                <h3 class="book-name">${book.book_name}</h3>
+                <button class="toggle-details">Больше информации</button>
+            </div>
             <div class="book-details item-details">
                 <hr class="line">
                 <div class="book-description">

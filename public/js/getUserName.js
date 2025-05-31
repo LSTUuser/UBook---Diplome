@@ -1,8 +1,16 @@
-async function loadUserInfo() {
+async function loadUserInfo(forceRefresh = false) {
     try {
+        // Если нужно принудительное обновление, сначала обновляем токен
+        if (forceRefresh) {
+            await fetch('/api/auth/refresh-token', {
+                method: 'POST',
+                credentials: 'include'
+            });
+        }
+
         const response = await fetch('/api/auth/check', {
             method: 'GET',
-            credentials: 'include' // обязательно для отправки cookie
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -12,23 +20,28 @@ async function loadUserInfo() {
         const data = await response.json();
 
         if (data.isAuthenticated) {
-            const headerNameElement = document.getElementById('user-name');
-            const bodyNameElement = document.getElementById('user-name-body');
-            const groupNameElement = document.getElementById('group-name');
-
-            if (headerNameElement) {
-                headerNameElement.textContent = data.user.fullName;
-            }
-            if (bodyNameElement) {
-                bodyNameElement.textContent = data.user.fullName;
-            }
-            if (groupNameElement) {
-                groupNameElement.textContent = data.user.group;
-            }
+            updateUserInfo(data.user);
         }
     } catch (error) {
         console.error('Ошибка загрузки информации о пользователе:', error);
     }
 }
 
-window.addEventListener('DOMContentLoaded', loadUserInfo);
+function updateUserInfo(user) {
+    const headerNameElement = document.getElementById('user-name');
+    const bodyNameElement = document.getElementById('user-name-body');
+    const groupNameElement = document.getElementById('group-name');
+
+    if (headerNameElement) {
+        headerNameElement.textContent = user.fullName || 'Пользователь';
+    }
+    if (bodyNameElement) {
+        bodyNameElement.textContent = user.fullName || 'Пользователь';
+    }
+    if (groupNameElement) {
+        groupNameElement.textContent = user.group || 'Группа не указана';
+    }
+}
+
+// Обновляем при загрузке страницы
+window.addEventListener('DOMContentLoaded', () => loadUserInfo());

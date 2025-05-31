@@ -6,7 +6,7 @@ const { reorderAuthors } = require('../../utils/reorderAuthors');
 router.put('/books/:id', async (req, res) => {
     const bookId = req.params.id;
     const { book_name, author_full_name, year_of_publishing, udc_id, quantity } = req.body;
-
+    
     try {
         await pool.query('BEGIN'); // Начинаем транзакцию
 

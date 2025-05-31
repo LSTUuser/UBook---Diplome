@@ -55,6 +55,11 @@ async function fetchBooks(query = "", filters = {}) {
             );
         }
 
+        if (literature.length === 0) {
+            bookList.innerHTML = '<p>Книги не найдены</p>';
+            return;
+        }
+
         const bookList = document.querySelector('.book-list');
         bookList.innerHTML = ''; // Очистка списка перед вставкой новых данных
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const tf = require('@tensorflow/tfjs'); // GPU можно позже
+const tf = require('@tensorflow/tfjs');
 const use = require('@tensorflow-models/universal-sentence-encoder');
 const { getModel } = require('../../modelLoader');
 const pool = require('../../database');
@@ -14,7 +14,7 @@ async function translateRussianToEnglish(text) {
         return data[0].map(item => item[0]).join('');
     } catch (error) {
         console.error('Ошибка перевода:', error);
-        return text; // Возвращаем оригинальный текст в случае ошибки
+        return text;
     }
 }
 

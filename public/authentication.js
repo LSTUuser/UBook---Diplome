@@ -339,8 +339,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         
         if (profileData?.success) {
             // Заполняем поля формы
-            document.getElementById('fullname').value = profileData.user.fullName || '';
-            document.getElementById('id-card').value = profileData.user.idCard || '';
+            document.getElementById('fullname').value = profileData.user?.fullName || '';
+            document.getElementById('id-card').value = profileData.user?.idCard || '';
             
             // Загружаем список групп
             const groupSelect = document.getElementById('group-select');
@@ -351,24 +351,29 @@ document.addEventListener('DOMContentLoaded', async function () {
                 if (result.success) {
                     groupSelect.innerHTML = '<option value="" disabled>Выберите группу</option>';
                     // Сортируем группы
-                    const sortedGroups = result.groups.sort();
+                    const sortedGroups = result.groups?.sort() || [];
                     // Добавляем группы в select
                     sortedGroups.forEach(group => {
+                        if (!group) return; // Пропускаем пустые значения
+                        
                         const option = new Option(group, group);
                         
                         // Устанавлием выбранной текущую группу пользователя
-                        if (group.trim().toLowerCase() === (profileData.user.group || '').trim().toLowerCase()) {
+                        const userGroup = profileData.user?.group || '';
+                        if (group.trim().toLowerCase() === userGroup.trim().toLowerCase()) {
                             option.selected = true;
                         }
                         groupSelect.add(option);
                     });
                     
                     // Если группа не установилась, попробуем найти похожую
-                    if (!groupSelect.value && profileData.user.group) {
+                    if (!groupSelect.value && profileData.user?.group) {
+                        const userGroup = profileData.user.group;
                         const similarGroup = sortedGroups.find(g => 
-                            g.includes(profileData.user.group) || 
-                            profileData.user.group.includes(g)
-                        );
+                            g && userGroup && (
+                                g.includes(userGroup) || 
+                                userGroup.includes(g)
+                        ));
                         
                         if (similarGroup) {
                             groupSelect.value = similarGroup;
@@ -380,20 +385,73 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
         }
 
+        // Получаем список всех пользователей для проверки уникальности студенческого билета
+        let allUsers = [];
+        try {
+            const usersResponse = await fetch('/api/user/users');
+            const usersResult = await usersResponse.json();
+            if (usersResult && Array.isArray(usersResult)) {
+                allUsers = usersResult;
+            }
+        } catch (error) {
+            console.error('Ошибка загрузки списка пользователей:', error);
+        }
+
+        // Проверка уникальности студенческого билета при изменении
+        const idCardInput = document.getElementById('id-card');
+        if (idCardInput) {
+            // Функция проверки уникальности
+            const validateIdCard = () => {
+                const currentIdCard = idCardInput.value?.trim() || '';
+                const originalIdCard = profileData?.user?.idCard?.trim() || '';
+                
+                // Если номер изменился и не пустой
+                if (currentIdCard && currentIdCard !== originalIdCard) {
+                    const isDuplicate = allUsers.some(user => 
+                        user?.student_id_number && 
+                        user.student_id_number.trim().toLowerCase() === currentIdCard.toLowerCase()
+                    );
+                    
+                    if (isDuplicate) {
+                        idCardInput.setCustomValidity('Этот номер студенческого билета уже используется');
+                        return false;
+                    }
+                }
+                idCardInput.setCustomValidity('');
+                return true;
+            };
+
+            // Проверяем при каждом изменении
+            idCardInput.addEventListener('input', function() {
+                validateIdCard();
+                // Принудительно обновляем состояние валидации
+                idCardInput.reportValidity();
+            });
+
+            // Также проверяем при потере фокуса
+            idCardInput.addEventListener('blur', validateIdCard);
+        }
+
         // Обработчик отправки формы
         const editForm = document.querySelector('.edit-container form');
         if (editForm) {
             editForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
                 
+                // Проверяем валидность перед отправкой
+                if (idCardInput && !idCardInput.checkValidity()) {
+                    idCardInput.reportValidity();
+                    return;
+                }
+                
                 try {
                     const response = await fetch('/api/user/update_profile', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            fullname: document.getElementById('fullname').value,
-                            idCard: document.getElementById('id-card').value,
-                            group: document.getElementById('group-select').value
+                            fullname: document.getElementById('fullname')?.value || '',
+                            idCard: document.getElementById('id-card')?.value || '',
+                            group: document.getElementById('group-select')?.value || ''
                         }),
                         credentials: 'include'
                     });
@@ -413,12 +471,12 @@ document.addEventListener('DOMContentLoaded', async function () {
                         message.style.borderRadius = '5px';
                         message.style.zIndex = '1000';
                         document.body.appendChild(message);
-                        
+
                         setTimeout(() => {
                             window.location.href = '/user/dashboard.html';
                         }, 1500);
                     } else {
-                        alert('Ошибка: ' + result.message);
+                        alert('Ошибка: ' + (result.message || 'Неизвестная ошибка'));
                     }
                 } catch (error) {
                     console.error('Ошибка:', error);

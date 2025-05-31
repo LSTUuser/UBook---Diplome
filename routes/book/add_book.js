@@ -86,8 +86,8 @@ router.post('/books', async (req, res) => {
         const similarityScore = bestSubject.score;
 
         console.log(similarityScore);
-        // 6. Назначение только если сходство > 0.7
-        if (similarityScore >= 0.7) {
+        // 6. Назначение только если сходство > 0.6
+        if (similarityScore >= 0.6) {
             // Получаем специальности для этой дисциплины
             const specialities = await pool.query(
                 'SELECT DISTINCT speciality_id FROM educational_period WHERE subject_id = $1',

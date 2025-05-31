@@ -135,8 +135,10 @@ function createBookElement(book) {
     bookItem.dataset.id = book.book_id; // Сохраняем ID книги
 
     bookItem.innerHTML = `
-            <h3 class="book-name">${book.book_name}</h3>
-            <button class="toggle-details">Больше информации</button>
+            <div class="book-cover item-cover">
+                <h3 class="book-name">${book.book_name}</h3>
+                <button class="toggle-details">Больше информации</button>
+            </div>
             <div class="book-details item-details">
                 <hr class="line">
                 <div class="book-description">
@@ -145,7 +147,7 @@ function createBookElement(book) {
                     <div>УДК: ${book.udc_id}</div>
                     <div>Категория: ${book.udc_name}</div>
                 </div>
-            </div>
+            </div>    
     `;
 
     // Обработчик кнопки "Больше информации"

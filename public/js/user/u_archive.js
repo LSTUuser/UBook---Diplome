@@ -9,23 +9,21 @@ document.addEventListener("DOMContentLoaded", async function () {
     initFilter();
     initDropdown();
     await checkUnreadNotifications();
+    updateStatistics([]);
 });
 
-function updateStatistics(literature) {
+function updateStatistics(literature = []) {
     const totalBooks = literature.length;
     let returnedOnTime = 0;
     let overdue = 0;
 
     literature.forEach(book => {
-        if (!book.return_period) {
-            // Если срок возврата отсутствует, пропускаем эту книгу
-            return;
-        }
+        if (!book.return_period) return;
 
         const returnDate = new Date(book.return_date);
         const returnPeriod = new Date(book.return_period);
 
-        if (returnDate <= returnPeriod) {
+        if (returnDate >= returnPeriod) {
             returnedOnTime++;
         } else {
             overdue++;
@@ -83,10 +81,10 @@ async function fetchBooks(query = "", filters = {}) {
         const bookList = document.querySelector('.book-list');
         bookList.innerHTML = ''; // Очистка списка перед вставкой новых данных
 
-        // if (literature.length === 0) {
-        //     bookList.innerHTML = '<p>У вас нет выданных книг</p>';
-        //     return;
-        // }
+        if (literature.length === 0) {
+            bookList.innerHTML = '<p>Книги не найдены</p>';
+            return;
+        }
 
         literature.forEach(book => {
             const bookItem = createBookElement(book);
@@ -99,6 +97,7 @@ async function fetchBooks(query = "", filters = {}) {
 
     } catch (error) {
         console.error('Ошибка загрузки книг:', error);
+        updateStatistics([]);
     }
 }
 
@@ -118,15 +117,17 @@ function createBookElement(book) {
     const returnPeriod = new Date(book.return_period);
 
     // Выбираем класс в зависимости от даты возврата
-    const returnClass = returnDate <= returnPeriod ? 'on-time' : 'late';
+    const returnClass = returnDate >= returnPeriod ? 'on-time' : 'late';
 
     bookItem.innerHTML = ` 
-                <h3 class="book-name">${book.book_name}</h3>
-                <h5 class="book-date">
-                    <div class="issuance-date">Дата выдачи: ${formatDate(book.issuance_date)}</div>
-                    <div class="return-date ${returnClass}">Дата возврата: ${formatDate(book.return_date)}</div>
-                </h5>
-                <button class="toggle-details">Больше информации</button>
+                <div class="book-cover item-cover">
+                    <h3 class="book-name">${book.book_name}</h3>
+                    <h5 class="book-date">
+                        <div class="issuance-date">Дата выдачи: ${formatDate(book.issuance_date)}</div>
+                        <div class="return-date ${returnClass}">Дата возврата: ${formatDate(book.return_date)}</div>
+                    </h5>
+                    <button class="toggle-details">Больше информации</button>
+                </div>
                 <div class="book-details item-details">
                     <hr class="line">
                     <div class="book-description">
