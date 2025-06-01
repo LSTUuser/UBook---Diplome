@@ -64,12 +64,14 @@ async function fetchIssuances(query = "", filters = {}) {
             );
         }
 
+        const issuanceList = document.querySelector('.issuance-list');
+
         if (issuances.length === 0) {
             issuanceList.innerHTML = '<p>Выдачи не найдены</p>';
             return;
         }
 
-        const issuanceList = document.querySelector('.issuance-list');
+        
         issuanceList.innerHTML = ''; // Очистка списка перед вставкой новых данных
 
         issuances.forEach((issuance, index) => {
@@ -237,6 +239,7 @@ async function populateSelects() {
 
 async function initAddItem() {
     const addIssuanceForm = document.querySelector('.add-issuance-form');
+    const modal = document.querySelector('.modal'); 
 
     const users = await fetch('http://localhost:3000/api/user/users').then(res => res.json());
     const books = await fetch('http://localhost:3000/api/book/books').then(res => res.json());
