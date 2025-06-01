@@ -108,7 +108,7 @@ router.post('/books', async (req, res) => {
 
         res.json({
             ...result.rows[0],
-            assigned_subject: similarityScore >= 0.7 ? bestSubject.subject_name : null,
+            assigned_subject: similarityScore >= 0.6 ? bestSubject.subject_name : null,
             similarity_score: similarityScore
         });
 

@@ -5,7 +5,7 @@ const { reorderAuthors } = require('../../utils/reorderAuthors');
 
 router.put('/books/:id', async (req, res) => {
     const bookId = req.params.id;
-    const { book_name, author_full_name, year_of_publishing, udc_id, quantity } = req.body;
+    const { book_name, author_full_name, year_of_publishing, quantity } = req.body;
     
     try {
         await pool.query('BEGIN'); // Начинаем транзакцию
@@ -41,10 +41,10 @@ router.put('/books/:id', async (req, res) => {
         // Обновляем книгу в literature (без изменения автора)
         const result = await pool.query(`
             UPDATE literature
-            SET book_name = $1, year_of_publishing = $2, udc_id = $3, quantity = $4
-            WHERE book_id = $5
+            SET book_name = $1, year_of_publishing = $2, quantity = $3
+            WHERE book_id = $4
             RETURNING *;
-        `, [book_name, year_of_publishing, udc_id, quantity, bookId]);
+        `, [book_name, year_of_publishing, quantity, bookId]);
 
         if (result.rows.length === 0) {
             await pool.query('ROLLBACK');

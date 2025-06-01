@@ -107,10 +107,6 @@ function createBookElement(book) {
                 <input type="number" name="year" min="1" placeholder="Введите год" value="${book.year_of_publishing}" required>
             </div>
             <div class="input-group">
-                <label for="edit-udk">УДК</label>
-                <input type="text" name="udk" placeholder="Введите УДК" value="${book.udc_id}" required>
-            </div>
-            <div class="input-group">
                 <label for="edit-quantity">Количество:</label>
                 <input type="number" name="quantity" min="0" placeholder="Введите количество" value="${book.quantity}" required>
             </div>
@@ -207,7 +203,6 @@ async function updateBook(bookItem) {
         book_name: formData.get("name"),
         author_full_name: formData.get("author"),
         year_of_publishing: formData.get("year"),
-        udc_id: formData.get("udk"),
         quantity: formData.get("quantity")
     };
 
@@ -221,18 +216,6 @@ async function updateBook(bookItem) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedBook)
         });
-
-        if (!response.ok) {
-            const udcInput = bookItem.querySelector('[name="udk"]');
-            udcInput.setCustomValidity("УДК не найдено");
-            udcInput.reportValidity();
-
-            // Добавляем обработчик, чтобы ошибка сбрасывалась при изменении поля
-            udcInput.addEventListener("input", function () {
-                udcInput.setCustomValidity("");
-            });
-            throw new Error('Ошибка при обновлении книги')
-        };
 
         console.log("Книга обновлена");
         await fetchBooks(); // Перезагрузка списка книг
@@ -288,6 +271,10 @@ function initAddItem() {
     
     addBookForm.addEventListener('submit', async function(event) {
         event.preventDefault();
+
+        const submitBtn = addBookForm.querySelector('button[type="submit"]');
+        const resetBtn = addBookForm.querySelector('button[type="reset"]');
+        const hideBtn = addBookForm.querySelector('button[type="button"]');
         
         const formData = new FormData(addBookForm);
         const udkValue = $('#udkSelect').val();
@@ -301,6 +288,11 @@ function initAddItem() {
         };
 
         try {
+            submitBtn.disabled = true;
+            if (resetBtn) resetBtn.disabled = true;
+            if (hideBtn) hideBtn.disabled = true;
+            submitBtn.textContent = 'Добавление...';
+
             const response = await fetch('http://localhost:3000/api/book/books', {
                 method: 'POST',
                 headers: {
@@ -309,23 +301,80 @@ function initAddItem() {
                 body: JSON.stringify(bookData)
             });
 
-            if (response.ok) {
-                const newBook = await response.json();
-                const bookList = document.querySelector('.book-list');
-                const bookItem = createBookElement(newBook);
-                bookList.prepend(bookItem);
-
-                addBookForm.reset();
-                $('#udkSelect').val(null).trigger('change');
-                await fetchBooks();
-                initPagination();
-            } else {
-                alert('Ошибка при добавлении книги');
+            if (!response.ok) {
+                throw new Error(await response.text() || 'Ошибка при добавлении книги');
             }
+
+            const newBook = await response.json();
+            
+            // 1. Обновляем интерфейс
+            const bookList = document.querySelector('.book-list');
+            const bookItem = createBookElement(newBook);
+            bookList.prepend(bookItem);
+
+            // 2. Закрываем модальное окно
+            document.getElementById('addItemModal').style.display = 'none';
+
+            // 3. Показываем уведомление (если есть назначенная дисциплина)
+            if (newBook.assigned_subject) {
+                showNotification(
+                    `Книга добавлена в рекомендации для дисциплины: ${newBook.assigned_subject}`,
+                    'success'
+                );
+            } else {
+                showNotification(
+                    'Книга успешно добавлена в фонд',
+                    'success'
+                );
+            }
+
+            // 4. Сбрасываем форму и обновляем список
+            addBookForm.reset();
+            $('#udkSelect').val(null).trigger('change');
+            await fetchBooks();
+            initPagination();
+
         } catch (error) {
-            console.error('Ошибка при добавлении книги:', error);
+            console.error('Ошибка:', error);
+            showNotification(
+                error.message || 'Ошибка при добавлении книги',
+                'error'
+            );
+        } finally {
+            // Разблокируем кнопки
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Добавить';
+            }
+            if (resetBtn) resetBtn.disabled = false;
+            if (hideBtn) hideBtn.disabled = false;
         }
     });
+}
+
+// Универсальная функция показа уведомлений
+function showNotification(message, type = 'success') {
+    // Удаляем предыдущие уведомления
+    document.querySelectorAll('.custom-notification').forEach(el => el.remove());
+
+    const notification = document.createElement('div');
+    notification.className = `custom-notification ${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span>${message}</span>
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Автоматическое удаление
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            notification.remove();
+            style.remove();
+        }, 300);
+    }, 4000);
 }
 
 // Инициализация выпадающего списка УДК с подгрузкой при прокрутке
