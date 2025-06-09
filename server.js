@@ -21,6 +21,7 @@ const groupRoutes = require('./routes/group');
 
 const idNumberRoutes = require('./routes/book/id_number');
 const booksRoutes = require('./routes/book/books');
+const usBooksRoutes = require('./routes/book/us_books');
 const udcId = require('./routes/book/udc_id');
 const udcRoutes = require('./routes/book/udcs');
 const udcSearchRoutes = require('./routes/book/udcSearch');
@@ -50,6 +51,7 @@ app.use('/api', groupRoutes);
 
 app.use('/api', idNumberRoutes)
 app.use('/api/book', booksRoutes);
+app.use('/api/book', usBooksRoutes);
 app.use('/api/book', udcId);
 app.use('/api/book/udcs', udcRoutes);
 app.use('/api/book/udcs', udcSearchRoutes);

@@ -3,7 +3,7 @@ import { checkUnreadNotifications } from '../checkUnredNotif.js';
 document.addEventListener("DOMContentLoaded", async function () {
     // Группировка функций
     fetchBooks().then(() => {
-        initPagination(); // Вызови пагинацию после загрузки книг
+        initPagination();
         initSearch();
     });
     initFilter();

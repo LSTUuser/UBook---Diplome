@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 async function fetchBooks(query = "", filters = {}) {
     try {
-        const response = await fetch('http://localhost:3000/api/book/books');
+        const response = await fetch('http://localhost:3000/api/book/us_books');
         if (!response.ok) throw new Error('Ошибка при загрузке данных');
 
         let literature = await response.json();

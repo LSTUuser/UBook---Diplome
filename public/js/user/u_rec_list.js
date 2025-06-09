@@ -107,6 +107,7 @@ function displaySubjects(subjects, allBooks) {
             e.preventDefault();
             const filteredBooks = allBooks.filter(book => book.subject_name === subject.name);
             renderFilteredBooks(filteredBooks);
+            initPagination();
         });
         
         sidebar.insertBefore(subjectLink, udcContainer.nextSibling);
@@ -127,6 +128,7 @@ function renderFilteredBooks(books) {
         const bookItem = createBookElement(book);
         bookList.appendChild(bookItem);
     });
+    return books;
 }
 
 function createBookElement(book) {

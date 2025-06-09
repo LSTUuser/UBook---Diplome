@@ -200,7 +200,7 @@ async function populateSelects() {
             userSelect.appendChild(option);
         });
 
-        const books = await fetch('http://localhost:3000/api/book/books').then(res => res.json());
+        const books = await fetch('http://localhost:3000/api/book/us_books').then(res => res.json());
         const bookSelect = document.getElementById('bookSelect');
         const availableBooks = books.filter(book => book.available === true);
 
@@ -242,7 +242,7 @@ async function initAddItem() {
     const modal = document.querySelector('.modal'); 
 
     const users = await fetch('http://localhost:3000/api/user/users').then(res => res.json());
-    const books = await fetch('http://localhost:3000/api/book/books').then(res => res.json());
+    const books = await fetch('http://localhost:3000/api/book/us_books').then(res => res.json());
 
     const $userSelect = $('#userSelect'); // jQuery
     const $bookSelect = $('#bookSelect');

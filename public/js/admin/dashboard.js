@@ -1,8 +1,8 @@
-import { initPagination } from '../pagination.js';
+//import { initPagination } from '../pagination.js';
 document.addEventListener("DOMContentLoaded", function () {
     // Группировка функций
-    fetchBooks().then(() => {
-        initPagination(); // Вызови пагинацию после загрузки книг
+    fetchBooks(1).then(() => {
+        //initPagination(); // Вызови пагинацию после загрузки книг
         initSearch();
     });
     initFilter();
@@ -18,63 +18,94 @@ function sortBooks(literature) {
 }
 
 // Асинхронная функция загрузки книг
-async function fetchBooks(query = "", filters = {}) {
+// dashboard.js
+let currentSearch = '';
+let currentFilters = {};
+let currentPage = 1;
+const itemsPerPage = 10;
+
+// Основная функция загрузки книг
+async function fetchBooks(page = 1, search = currentSearch, filters = currentFilters) {
     try {
-        const response = await fetch('http://localhost:3000/api/book/books');
-        if (!response.ok) throw new Error('Ошибка при загрузке данных');
+        currentPage = page;
+        currentSearch = search;
+        currentFilters = filters;
 
-        let literature = await response.json();
-        literature = sortBooks(literature);
+        // Собираем параметры запроса
+        const params = new URLSearchParams();
+        params.append('page', page);
+        params.append('limit', itemsPerPage);
+        
+        if (search) params.append('search', search);
+        if (filters.author) params.append('author', filters.author);
+        if (filters.category) params.append('category', filters.category);
+        if (filters.year) params.append('year', filters.year);
+        if (filters.udk) params.append('udk', filters.udk);
 
-        // Фильтрация по поисковому запросу (название книги)
-        if (query) {
-            literature = literature.filter(book =>
-                book.book_name.toLowerCase().includes(query.toLowerCase())
-            );
-        }
-
-        // Фильтрация по параметрам фильтра
-        if (filters.author) {
-            literature = literature.filter(book =>
-                book.author_full_name.toLowerCase().includes(filters.author.toLowerCase())
-            );
-        }
-        if (filters.category) {
-            literature = literature.filter(book =>
-                book.udc_name.toLowerCase().includes(filters.category.toLowerCase())
-            );
-        }
-        if (filters.year) {
-            literature = literature.filter(book =>
-                book.year_of_publishing.toString().includes(filters.year)
-            );
-        }
-        if (filters.udk) {
-            literature = literature.filter(book =>
-                book.udc_id.toLowerCase().includes(filters.udk.toLowerCase())
-            );
-        }
-
+        const response = await fetch(`/api/book/books?${params.toString()}`);
+        
+        if (!response.ok) throw new Error(await response.text());
+        
+        const result = await response.json();
+        
         const bookList = document.querySelector('.book-list');
+        bookList.innerHTML = '';
 
-        if (literature.length === 0) {
-            bookList.innerHTML = '<p>Книги не найдены</p>';
+        if (!result.data || result.data.length === 0) {
+            bookList.innerHTML = '<p class="no-books">Книги не найдены</p>';
+            updatePagination(0, 1);
             return;
         }
 
-        bookList.innerHTML = ''; // Очистка списка перед вставкой новых данных
-
-        literature.forEach(book => {
-            const bookItem = createBookElement(book);
-            bookList.appendChild(bookItem);
+        result.data.forEach(book => {
+            bookList.appendChild(createBookElement(book));
         });
 
-        initPagination();
+        updatePagination(
+            result.pagination.total,
+            result.pagination.totalPages
+        );
 
     } catch (error) {
         console.error('Ошибка загрузки книг:', error);
+        document.querySelector('.book-list').innerHTML = `
+            <p class="error-message">${error.message}</p>
+        `;
     }
 }
+
+function updatePagination(total, totalPages) {
+    document.querySelector('.page-info').textContent = 
+        `Страница ${currentPage} из ${totalPages}`;
+    
+    document.querySelector('.prev-page').disabled = currentPage <= 1;
+    document.querySelector('.next-page').disabled = currentPage >= totalPages;
+    
+    const pageSelect = document.querySelector('.page-select');
+    pageSelect.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `Страница ${i}`;
+        option.selected = i === currentPage;
+        pageSelect.appendChild(option);
+    }
+}
+
+// Обновите обработчики событий для кнопок пагинации
+document.querySelector(".prev-page")?.addEventListener("click", () => {
+    if (currentPage > 1) {
+        fetchBooks(currentPage - 1);
+    }
+});
+
+document.querySelector(".next-page")?.addEventListener("click", () => {
+    fetchBooks(currentPage + 1);
+});
+
+document.querySelector(".page-select")?.addEventListener("change", (e) => {
+    fetchBooks(parseInt(e.target.value));
+});
 
 // Функция создания элемента книги
 function createBookElement(book) {
@@ -333,7 +364,6 @@ function initAddItem() {
             addBookForm.reset();
             $('#udkSelect').val(null).trigger('change');
             await fetchBooks();
-            initPagination();
 
         } catch (error) {
             console.error('Ошибка:', error);
@@ -446,7 +476,7 @@ async function initDeleteItem(bookItem) {
 
             console.log(`Книга с ID ${bookId} удалена`);
             bookItem.remove(); // Удаление элемента из списка
-            initPagination();
+            await fetchBooks();
             closeModal();
         } catch (error) {
             console.error("Ошибка при удалении книги:", error);
@@ -470,30 +500,37 @@ async function initDeleteItem(bookItem) {
 function initSearch() {
     const searchInput = document.querySelector('.search-input');
     const searchButton = document.querySelector('.search-button');
-    const clearSearch = document.getElementById('clear-search'); // Крестик
+    const clearSearch = document.getElementById('clear-search');
 
-    // Обработчик ввода текста в поле поиска
-    searchInput.addEventListener('input', function () {
-        if (searchInput.value.trim() !== '') {
-            clearSearch.style.display = 'block'; // Показываем крестик
-        } else {
-            clearSearch.style.display = 'none'; // Скрываем крестик
+    // Поиск при вводе (с задержкой)
+    let searchTimeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            const searchText = this.value.trim();
+            if (searchText !== currentSearch) {
+                fetchBooks(1, searchText, currentFilters);
+            }
+        }, 500);
+
+        clearSearch.style.display = this.value.trim() ? 'block' : 'none';
+    });
+
+    // Очистка поиска
+    clearSearch.addEventListener('click', function() {
+        searchInput.value = '';
+        clearSearch.style.display = 'none';
+        if (currentSearch) {
+            fetchBooks(1, '', currentFilters);
         }
     });
 
-    // Обработчик клика на крестик
-    clearSearch.addEventListener('click', function () {
-        searchInput.value = ''; // Очищаем поле
-        clearSearch.style.display = 'none'; // Скрываем крестик
-        fetchBooks(); // Перезагружаем книги (без поискового запроса)
-    });
-
-    // Обработчик клика на кнопку "Поиск"
-    searchButton.addEventListener('click', function () {
-        const searchText = searchInput.value.toLowerCase().trim();
-
-        // Передаем поисковый запрос и пустой объект фильтров
-        fetchBooks(searchText, {});
+    // Кнопка поиска (дублирует функционал)
+    searchButton.addEventListener('click', function() {
+        const searchText = searchInput.value.trim();
+        if (searchText !== currentSearch) {
+            fetchBooks(1, searchText, currentFilters);
+        }
     });
 }
 
@@ -501,33 +538,28 @@ function initFilter() {
     const filterForm = document.querySelector('.filter-form');
 
     if (filterForm) {
-        filterForm.addEventListener('submit', function (event) {
-            event.preventDefault(); // Предотвращаем отправку формы
-
-            // Собираем данные из формы
-            const filterData = {
-                author: filterForm.querySelector('#author').value.trim(),
-                category: filterForm.querySelector('#category').value.trim(),
-                year: filterForm.querySelector('#year').value.trim(),
-                udk: filterForm.querySelector('#udk').value.trim(),
-            };
-
-            // Получаем текущий поисковый запрос
-            const searchInput = document.querySelector('.search-input');
-            const searchText = searchInput.value.trim();
-
-            // Передаем поисковый запрос и данные фильтра в fetchBooks
-            fetchBooks(searchText, filterData);
+        filterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            applyFilters();
         });
 
-        // Обработчик кнопки "Сбросить"
-        filterForm.addEventListener('reset', function () {
-            // Получаем текущий поисковый запрос
-            const searchInput = document.querySelector('.search-input');
-            const searchText = searchInput.value.trim();
-
-            // Передаем поисковый запрос и пустой объект фильтров
-            fetchBooks(searchText, {});
+        filterForm.addEventListener('reset', function() {
+            currentFilters = {};
+            fetchBooks(1, currentSearch, {});
         });
     }
+}
+
+function applyFilters() {
+    const filterForm = document.querySelector('.filter-form');
+    if (!filterForm) return;
+
+    const newFilters = {
+        author: filterForm.querySelector('#author').value.trim(),
+        category: filterForm.querySelector('#category').value.trim(),
+        year: filterForm.querySelector('#year').value.trim(),
+        udk: filterForm.querySelector('#udk').value.trim()
+    };
+
+    fetchBooks(1, currentSearch, newFilters);
 }
